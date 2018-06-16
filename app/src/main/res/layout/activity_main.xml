@@ -1,0 +1,257 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".MainActivity">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="?actionBarSize"
+        android:background="@color/colorPrimary">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:textStyle="bold"
+            android:text="@string/home"
+            android:textSize="20sp"
+            android:textColor="@color/white"/>
+    </RelativeLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scrollbars="none">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="30dp"
+            android:orientation="vertical">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                android:background="@color/colorPrimaryDark">
+
+                <Button
+                    android:id="@+id/btn_my_doctors"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="?selectableItemBackground"
+                    android:padding="25dp"
+                    android:text="@string/my_doctors"
+                    android:textAllCaps="false"
+                    android:textColor="@color/white"
+                    android:textSize="22sp" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:background="@color/colorPrimaryDark">
+
+                <Button
+                    android:id="@+id/btn_camp_plan"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="?selectableItemBackground"
+                    android:padding="30dp"
+                    android:text="@string/camp_plan"
+                    android:textAllCaps="false"
+                    android:textColor="@color/white"
+                    android:textSize="22sp" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:background="@color/colorPrimary">
+
+                <Button
+                    android:id="@+id/btn_camp_execution"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="?selectableItemBackground"
+                    android:padding="30dp"
+                    android:text="@string/camp_execution"
+                    android:textAllCaps="false"
+                    android:textColor="@color/white"
+                    android:textSize="22sp" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:background="@color/colorAccent">
+
+                <Button
+                    android:id="@+id/btn_notification"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="?selectableItemBackground"
+                    android:padding="30dp"
+                    android:text="@string/notification"
+                    android:textAllCaps="false"
+                    android:textColor="@color/white"
+                    android:textSize="22sp" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:background="@color/colorPrimaryDark">
+
+                <Button
+                    android:id="@+id/btn_leaderboard"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="?selectableItemBackground"
+                    android:padding="30dp"
+                    android:text="@string/leaderboard"
+                    android:textAllCaps="false"
+                    android:textColor="@color/white"
+                    android:textSize="22sp" />
+            </RelativeLayout>
+
+
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>
+
+    <!--<?xml version="1.0" encoding="utf-8"?>-->
+<!--<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"-->
+<!--xmlns:tools="http://schemas.android.com/tools"-->
+<!--android:layout_width="match_parent"-->
+<!--android:layout_height="match_parent"-->
+<!--android:background="@drawable/home_bg"-->
+<!--android:orientation="vertical"-->
+<!--tools:context=".MainActivity">-->
+
+<!--<RelativeLayout-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:background="@drawable/gradient_toolbar"-->
+    <!--android:layout_height="?actionBarSize">-->
+
+    <!--<TextView-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_centerInParent="true"-->
+        <!--android:text="@string/home"-->
+        <!--android:textColor="@color/white"-->
+        <!--android:textSize="20sp"-->
+        <!--android:textStyle="bold" />-->
+<!--</RelativeLayout>-->
+
+<!--<ScrollView-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="match_parent"-->
+    <!--android:scrollbars="none">-->
+
+    <!--<LinearLayout-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_margin="30dp"-->
+        <!--android:orientation="vertical">-->
+
+        <!--<RelativeLayout-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:background="@drawable/gradient_button_home">-->
+
+            <!--<Button-->
+                <!--android:id="@+id/btn_my_doctors"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:background="?selectableItemBackground"-->
+                <!--android:padding="25dp"-->
+                <!--android:text="@string/my_doctors"-->
+                <!--android:textAllCaps="false"-->
+                <!--android:textColor="@color/white"-->
+                <!--android:textSize="22sp" />-->
+        <!--</RelativeLayout>-->
+
+        <!--<RelativeLayout-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_marginTop="15dp"-->
+            <!--android:background="@drawable/gradient_button_home">-->
+
+            <!--<Button-->
+                <!--android:id="@+id/btn_camp_plan"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:background="?selectableItemBackground"-->
+                <!--android:padding="25dp"-->
+                <!--android:text="@string/camp_plan"-->
+                <!--android:textAllCaps="false"-->
+                <!--android:textColor="@color/white"-->
+                <!--android:textSize="22sp" />-->
+        <!--</RelativeLayout>-->
+
+        <!--<RelativeLayout-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_marginTop="15dp"-->
+            <!--android:background="@drawable/gradient_button_home">-->
+
+            <!--<Button-->
+                <!--android:id="@+id/btn_camp_execution"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:background="?selectableItemBackground"-->
+                <!--android:padding="25dp"-->
+                <!--android:text="@string/camp_execution"-->
+                <!--android:textAllCaps="false"-->
+                <!--android:textColor="@color/white"-->
+                <!--android:textSize="22sp" />-->
+        <!--</RelativeLayout>-->
+
+        <!--<RelativeLayout-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_marginTop="15dp"-->
+            <!--android:background="@drawable/gradient_button_home">-->
+
+            <!--<Button-->
+                <!--android:id="@+id/btn_notification"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:background="?selectableItemBackground"-->
+                <!--android:padding="25dp"-->
+                <!--android:text="@string/notification"-->
+                <!--android:textAllCaps="false"-->
+                <!--android:textColor="@color/white"-->
+                <!--android:textSize="22sp" />-->
+        <!--</RelativeLayout>-->
+
+        <!--<RelativeLayout-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_marginTop="15dp"-->
+            <!--android:background="@drawable/gradient_button_home">-->
+
+            <!--<Button-->
+                <!--android:id="@+id/btn_leaderboard"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:background="?selectableItemBackground"-->
+                <!--android:padding="25dp"-->
+                <!--android:text="@string/leaderboard"-->
+                <!--android:textAllCaps="false"-->
+                <!--android:textColor="@color/white"-->
+                <!--android:textSize="22sp" />-->
+        <!--</RelativeLayout>-->
+
+
+    <!--</LinearLayout>-->
+<!--</ScrollView>-->
+<!--</LinearLayout>-->
