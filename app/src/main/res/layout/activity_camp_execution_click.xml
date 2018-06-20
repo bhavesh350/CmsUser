@@ -2,6 +2,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/home_bg"
+    android:fitsSystemWindows="true"
     android:orientation="vertical">
 
     <include layout="@layout/toolbar"></include>
@@ -15,7 +17,7 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/colorPrimaryDark">
+            android:background="@drawable/gradient_button_home">
 
             <Button
                 android:id="@+id/btn_new_patient"
@@ -24,7 +26,7 @@
                 android:background="?selectableItemBackground"
                 android:text="@string/new_patient"
                 android:textAllCaps="false"
-                android:textColor="@color/white"
+                android:textColor="@color/colorPrimaryDark"
                 android:textSize="22sp" />
         </RelativeLayout>
 
@@ -32,7 +34,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="50dp"
-            android:background="@color/colorAccent">
+            android:background="@drawable/gradient_button_home">
 
             <Button
                 android:id="@+id/btn_history"
@@ -41,7 +43,7 @@
                 android:background="?selectableItemBackground"
                 android:text="@string/history"
                 android:textAllCaps="false"
-                android:textColor="@color/white"
+                android:textColor="@color/colorPrimaryDark"
                 android:textSize="22sp" />
         </RelativeLayout>
     </LinearLayout>

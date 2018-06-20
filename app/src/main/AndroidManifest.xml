@@ -60,6 +60,12 @@
             android:name=".RmMainActivity"
             android:screenOrientation="sensorPortrait" />
         <activity
+            android:name=".ZsmSmMainActivity"
+            android:screenOrientation="sensorPortrait" />
+        <activity
+            android:name=".CampHistoryZSMActivity"
+            android:screenOrientation="sensorPortrait" />
+        <activity
             android:name=".MyTeamActivity"
             android:screenOrientation="sensorPortrait" />
         <activity
@@ -89,10 +95,6 @@
             android:name=".AddDoctorActivity"
             android:screenOrientation="sensorPortrait" />
 
-        <activity
-            android:name=".DrawerActivity"
-            android:label="@string/title_activity_drawer"
-            android:theme="@style/AppTheme"></activity>
 
         <service android:name=".MyFirebaseInstanceIDService">
             <intent-filter>

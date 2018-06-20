@@ -2,6 +2,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/home_bg"
+    android:fitsSystemWindows="true"
     android:orientation="vertical">
 
     <include layout="@layout/toolbar"></include>
@@ -23,7 +25,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/patient_name"
-                android:textColor="@color/black" />
+                android:textColor="@color/white"
+                android:textStyle="bold" />
 
             <EditText
                 android:layout_width="match_parent"
@@ -46,7 +49,8 @@
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
                     android:text="@string/sex"
-                    android:textColor="@color/black"
+                    android:textColor="@color/white"
+                    android:textStyle="bold"
                     android:textSize="16sp" />
 
                 <RadioGroup
@@ -65,7 +69,8 @@
                         android:checked="true"
                         android:padding="5dp"
                         android:text="Male"
-                        android:textColor="@color/black"
+                        android:textColor="@color/white"
+                        android:textStyle="bold"
                         android:textSize="16sp" />
 
                     <RadioButton
@@ -75,7 +80,8 @@
                         android:layout_marginLeft="20dp"
                         android:padding="5dp"
                         android:text="Female"
-                        android:textColor="@color/black"
+                        android:textColor="@color/white"
+                        android:textStyle="bold"
                         android:textSize="16sp" />
                 </RadioGroup>
             </RelativeLayout>
@@ -85,7 +91,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="15dp"
                 android:text="@string/mobile_number"
-                android:textColor="@color/black" />
+                android:textColor="@color/white"
+                android:textStyle="bold" />
 
             <EditText
                 android:layout_width="match_parent"
@@ -103,7 +110,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="15dp"
                 android:text="@string/dob"
-                android:textColor="@color/black" />
+                android:textColor="@color/white"
+                android:textStyle="bold" />
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -146,7 +154,8 @@
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
                     android:text="@string/height"
-                    android:textColor="@color/black"
+                    android:textColor="@color/white"
+                    android:textStyle="bold"
                     android:textSize="16sp" />
 
                 <EditText
@@ -180,7 +189,8 @@
                     android:layout_centerVertical="true"
                     android:layout_toLeftOf="@+id/edt_weight"
                     android:text="@string/weight"
-                    android:textColor="@color/black"
+                    android:textColor="@color/white"
+                    android:textStyle="bold"
                     android:textSize="16sp" />
             </RelativeLayout>
 
@@ -195,7 +205,8 @@
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
                     android:text="@string/abdominal_circumference"
-                    android:textColor="@color/black"
+                    android:textColor="@color/white"
+                    android:textStyle="bold"
                     android:textSize="16sp" />
 
                 <EditText
@@ -225,7 +236,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:background="@color/colorPrimaryDark">
+        android:background="@drawable/gradient_toolbar">
 
         <Button
             android:id="@+id/btn_submit"

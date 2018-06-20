@@ -2,13 +2,21 @@ package com.cms.wockhardt.user;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.FrameLayout;
+import android.widget.RelativeLayout;
 import android.widget.Spinner;
+
+import com.cms.wockhardt.user.application.MyApp;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,6 +35,25 @@ public class LoginActivity extends CustomActivity {
 
         setupUiElements();
         setClick(R.id.btn_login);
+
+//        RelativeLayout rl_root = findViewById(R.id.rl_root);
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+//            if (rl_root != null) {
+//                rl_root.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+//            }
+//        }
+
+        //make full transparent statusBar
+        if (Build.VERSION.SDK_INT >= 19 && Build.VERSION.SDK_INT < 21) {
+            MyApp.setWindowFlag(this, WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS, true);
+        }
+        if (Build.VERSION.SDK_INT >= 19) {
+            getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
+        }
+        if (Build.VERSION.SDK_INT >= 21) {
+            MyApp.setWindowFlag(this, WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS, false);
+            getWindow().setStatusBarColor(Color.TRANSPARENT);
+        }
     }
 
     private void setupUiElements() {

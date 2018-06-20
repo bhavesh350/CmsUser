@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/home_bg"
     android:orientation="vertical">
 
     <include layout="@layout/toolbar"></include>
@@ -9,13 +10,14 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
         android:layout_margin="30dp"
         android:orientation="vertical">
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/colorPrimaryDark">
+            android:background="@drawable/gradient_button_home">
 
             <Button
                 android:id="@+id/btn_submit_plan"
@@ -25,7 +27,7 @@
                 android:padding="30dp"
                 android:text="@string/submit_plan"
                 android:textAllCaps="false"
-                android:textColor="@color/white"
+                android:textColor="@color/colorPrimaryDark"
                 android:textSize="22sp" />
         </RelativeLayout>
 
@@ -33,7 +35,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="25dp"
-            android:background="@color/colorPrimary">
+            android:background="@drawable/gradient_button_home">
 
             <Button
                 android:id="@+id/btn_my_camps"
@@ -43,7 +45,7 @@
                 android:padding="30dp"
                 android:text="@string/my_camps"
                 android:textAllCaps="false"
-                android:textColor="@color/white"
+                android:textColor="@color/colorPrimaryDark"
                 android:textSize="22sp" />
         </RelativeLayout>
 
@@ -51,7 +53,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="25dp"
-            android:background="@color/colorAccent">
+            android:background="@drawable/gradient_button_home">
 
             <Button
                 android:id="@+id/btn_history"
@@ -61,8 +63,8 @@
                 android:padding="30dp"
                 android:text="@string/history"
                 android:textAllCaps="false"
-                android:textColor="@color/white"
+                android:textColor="@color/colorPrimaryDark"
                 android:textSize="22sp" />
         </RelativeLayout>
     </LinearLayout>
-</LinearLayout>
+</RelativeLayout>

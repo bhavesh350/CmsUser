@@ -1,14 +1,18 @@
 package com.cms.wockhardt.user;
 
 import android.content.Context;
+import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.RelativeLayout;
 
 import com.cms.wockhardt.user.application.MyApp;
 import com.cms.wockhardt.user.application.SingleInstance;
@@ -34,8 +38,21 @@ public class AddDoctorActivity extends CustomActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowCustomEnabled(true);
-        getSupportActionBar().setTitle("Doctor Name");
+        getSupportActionBar().setTitle("Add Doctor");
         setupUiElements();
+
+        if (Build.VERSION.SDK_INT >= 19 && Build.VERSION.SDK_INT < 21) {
+            MyApp.setWindowFlag(this, WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS, true);
+        }
+        if (Build.VERSION.SDK_INT >= 19) {
+            getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
+        }
+        if (Build.VERSION.SDK_INT >= 21) {
+            RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) toolbar.getLayoutParams();
+            lp.setMargins(0, MyApp.getApplication().getStatusBarHeight(), 0, -MyApp.getApplication().getStatusBarHeight());
+            MyApp.setWindowFlag(this, WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS, false);
+            getWindow().setStatusBarColor(Color.TRANSPARENT);
+        }
     }
 
     private void setupUiElements() {
@@ -56,10 +73,9 @@ public class AddDoctorActivity extends CustomActivity {
         if (dList.size() > 0) {
             ArrayAdapter<String> adapter = new ArrayAdapter<>(this, R.layout.text_spinner, names);
             edt_name.setAdapter(adapter);
-
-            edt_name.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            edt_name.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
-                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                     edt_city.setText(dList.get(position).getCity());
                     edt_mobile.setText(dList.get(position).getMobile());
                     edt_msl_code.setText(dList.get(position).getMslCode());
@@ -67,12 +83,23 @@ public class AddDoctorActivity extends CustomActivity {
                     edt_speciality.setText(dList.get(position).getSpeciality());
                     isFromSaved = true;
                 }
-
-                @Override
-                public void onNothingSelected(AdapterView<?> parent) {
-
-                }
             });
+//            edt_name.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+//                @Override
+//                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+//                    edt_city.setText(dList.get(position).getCity());
+//                    edt_mobile.setText(dList.get(position).getMobile());
+//                    edt_msl_code.setText(dList.get(position).getMslCode());
+//                    edt_name.setText(dList.get(position).getName());
+//                    edt_speciality.setText(dList.get(position).getSpeciality());
+//                    isFromSaved = true;
+//                }
+//
+//                @Override
+//                public void onNothingSelected(AdapterView<?> parent) {
+//
+//                }
+//            });
         }
 
     }
