@@ -29,6 +29,7 @@ import android.widget.Toast;
 
 import com.cms.wockhardt.user.R;
 import com.cms.wockhardt.user.models.Doctor;
+import com.cms.wockhardt.user.models.User;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -582,9 +583,9 @@ public class MyApp extends Application {
     }
 
 
-    public static String parseDateToddMMyyyy(String time) {
-        String inputPattern = "dd-MM-yyyy";
-        String outputPattern = "dd-MMM-yyyy";
+    public static String parseDateFullMonth(String time) {
+        String inputPattern = "yyyy-mm-dd";
+        String outputPattern = "dd MMMM yyyy";
         SimpleDateFormat inputFormat = new SimpleDateFormat(inputPattern);
         SimpleDateFormat outputFormat = new SimpleDateFormat(outputPattern);
 
@@ -645,6 +646,16 @@ public class MyApp extends Application {
 
     }
 
+    public static String getTodayDate(Long x) {
+        DateFormat formatter = new SimpleDateFormat("dd MMMM yyyy");
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(x);
+
+        return formatter.format(calendar.getTime());
+
+    }
+
 
     public static void openFile(Context context, File url) throws IOException {
         // Create URI
@@ -696,17 +707,17 @@ public class MyApp extends Application {
         context.startActivity(intent);
     }
 
-    public List<Doctor> readDoctors() {
+    public List<Doctor.Data> readDoctors() {
         String path = "/data/data/" + ctx.getPackageName()
                 + "/doctorList.ser";
         File f = new File(path);
-        List<Doctor> device = new ArrayList<>();
+        List<Doctor.Data> device = new ArrayList<>();
         if (f.exists()) {
             try {
                 System.gc();
                 FileInputStream fileIn = new FileInputStream(path);
                 ObjectInputStream in = new ObjectInputStream(fileIn);
-                device = (List<Doctor>) in.readObject();
+                device = (List<Doctor.Data>) in.readObject();
                 in.close();
                 fileIn.close();
             } catch (StreamCorruptedException e) {
@@ -724,10 +735,58 @@ public class MyApp extends Application {
         return device;
     }
 
-    public void writeDoctors(List<Doctor> device) {
+    public void writeDoctors(List<Doctor.Data> device) {
         try {
             String path = "/data/data/" + ctx.getPackageName()
                     + "/doctorList.ser";
+            File f = new File(path);
+            if (f.exists()) {
+                f.delete();
+            }
+            FileOutputStream fileOut = new FileOutputStream(path);
+            ObjectOutputStream out = new ObjectOutputStream(fileOut);
+            out.writeObject(device);
+            out.close();
+            fileOut.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public User readUser() {
+        String path = "/data/data/" + ctx.getPackageName()
+                + "/user.ser";
+        File f = new File(path);
+        User device = new User();
+        if (f.exists()) {
+            try {
+                System.gc();
+                FileInputStream fileIn = new FileInputStream(path);
+                ObjectInputStream in = new ObjectInputStream(fileIn);
+                device = (User) in.readObject();
+                in.close();
+                fileIn.close();
+            } catch (StreamCorruptedException e) {
+                e.printStackTrace();
+            } catch (OptionalDataException e) {
+                e.printStackTrace();
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return device;
+    }
+
+    public void writeUser(User device) {
+        try {
+            String path = "/data/data/" + ctx.getPackageName()
+                    + "/user.ser";
             File f = new File(path);
             if (f.exists()) {
                 f.delete();

@@ -6,6 +6,9 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 
+import com.cms.wockhardt.user.application.AppConstants;
+import com.cms.wockhardt.user.application.MyApp;
+
 public class SplashActivity extends AppCompatActivity {
 
     @Override
@@ -16,8 +19,14 @@ public class SplashActivity extends AppCompatActivity {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                startActivity(new Intent(getContext(), LoginActivity.class));
-                finish();
+                if (MyApp.getStatus(AppConstants.IS_LOGIN)) {
+                    startActivity(new Intent(getContext(), MainActivity.class));
+                    finish();
+                } else {
+                    startActivity(new Intent(getContext(), LoginActivity.class));
+                    finish();
+                }
+
             }
         }, 1500);
     }

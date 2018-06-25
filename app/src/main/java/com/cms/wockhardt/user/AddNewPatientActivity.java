@@ -1,7 +1,9 @@
 package com.cms.wockhardt.user;
 
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
@@ -18,8 +20,13 @@ import android.widget.RadioGroup;
 import android.widget.Spinner;
 
 import com.cms.wockhardt.user.application.MyApp;
+import com.cms.wockhardt.user.application.SingleInstance;
 import com.github.rtoshiro.util.format.SimpleMaskFormatter;
 import com.github.rtoshiro.util.format.text.MaskTextWatcher;
+import com.loopj.android.http.RequestParams;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -28,15 +35,20 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-public class AddNewPatientActivity extends CustomActivity {
+import static com.cms.wockhardt.user.application.AppConstants.BASE_URL;
+
+public class AddNewPatientActivity extends CustomActivity implements CustomActivity.ResponseCallback {
 
     private Toolbar toolbar;
-    private EditText edt_dob;
+    private EditText edt_dob, edt_height, edt_weight;
+    private EditText edt_patient_name, edt_mobile, edt_abdo;
     private RadioGroup radio_group;
+    private String dob = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setResponseListener(this);
         setContentView(R.layout.activity_add_new_patient);
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -56,10 +68,17 @@ public class AddNewPatientActivity extends CustomActivity {
         }
     }
 
+    private boolean isMale = false;
+
     private void setupUiElements() {
         setTouchNClick(R.id.btn_date);
         setTouchNClick(R.id.btn_submit);
         edt_dob = findViewById(R.id.edt_dob);
+        edt_height = findViewById(R.id.edt_height);
+        edt_abdo = findViewById(R.id.edt_abdo);
+        edt_mobile = findViewById(R.id.edt_mobile);
+        edt_weight = findViewById(R.id.edt_weight);
+        edt_patient_name = findViewById(R.id.edt_patient_name);
         SimpleMaskFormatter smf = new SimpleMaskFormatter("NN/NN/NNNN");
         MaskTextWatcher mtw = new MaskTextWatcher(edt_dob, smf);
         edt_dob.addTextChangedListener(mtw);
@@ -69,9 +88,9 @@ public class AddNewPatientActivity extends CustomActivity {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
                 if (checkedId == R.id.radio_male) {
-
+                    isMale = true;
                 } else if (checkedId == R.id.radio_female) {
-
+                    isMale = false;
                 }
             }
         });
@@ -83,7 +102,61 @@ public class AddNewPatientActivity extends CustomActivity {
         if (v.getId() == R.id.btn_date) {
             dateDialog();
         } else if (v.getId() == R.id.btn_submit) {
-            startActivity(new Intent(getContext(), QuestionnaireActivity.class));
+
+            if (edt_patient_name.getText().toString().isEmpty()) {
+                edt_patient_name.setError("Enter patient name");
+                return;
+            }
+
+            if (edt_mobile.getText().toString().isEmpty() && edt_mobile.getText().length() != 10) {
+                edt_mobile.setError("Enter a valid mobile number");
+                return;
+            }
+
+            if (edt_dob.getText().toString().isEmpty() && edt_dob.getText().toString().length() != 10) {
+                edt_dob.setError("Enter a valid dob");
+                return;
+            }
+
+            if (edt_height.getText().toString().isEmpty()) {
+                edt_height.setError("Enter height in feet decimal");
+                return;
+            }
+            if (edt_weight.getText().toString().isEmpty()) {
+                edt_height.setError("Enter weight in kg");
+                return;
+            }
+
+            if (edt_abdo.getText().toString().isEmpty()) {
+                edt_abdo.setError("Enter abdominal circumference");
+                return;
+            }
+
+            AlertDialog.Builder b = new AlertDialog.Builder(getContext());
+            b.setTitle("Confirm Patient").setMessage("Are you sure with these details of the patient")
+                    .setPositiveButton("YES", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                            RequestParams p = new RequestParams();
+                            p.put("camp_id", SingleInstance.getInstance().getSelectedCamp().getId());
+                            p.put("name", edt_patient_name.getText().toString());
+                            p.put("sex", isMale ? "m" : "f");
+                            p.put("mobile", edt_mobile.getText().toString());
+                            p.put("dob", edt_dob.getText().toString());
+                            p.put("height", edt_height.getText().toString());
+                            p.put("weight", edt_weight.getText().toString());
+                            p.put("abdominal_circumference", edt_abdo.getText().toString());
+                            postCall(getContext(), BASE_URL + "create-patient", p, "Creating Patient...", 1);
+                        }
+                    }).setNegativeButton("NO", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                }
+            }).create().show();
+
+
         }
     }
 
@@ -105,10 +178,6 @@ public class AddNewPatientActivity extends CustomActivity {
                     public void onDateSet(DatePicker view, int year,
                                           int monthOfYear, int dayOfMonth) {
                         edt_dob.setText(parseDate(dayOfMonth + "-" + (monthOfYear + 1) + "-" + year));
-//                        myYear = year;
-//                        myMonth = monthOfYear;
-//                        myDay = dayOfMonth;
-//                        date_to_be_sent = year + "-" + (monthOfYear + 1) + "-" + dayOfMonth;
                     }
                 }, mYear, mMonth, mDay);
         datePickerDialog.getDatePicker().setMinDate(System.currentTimeMillis() - 1000);
@@ -134,4 +203,29 @@ public class AddNewPatientActivity extends CustomActivity {
     }
 
 
+    @Override
+    public void onJsonObjectResponseReceived(JSONObject o, int callNumber) {
+        if (callNumber == 1 && o.optBoolean("status")) {
+            MyApp.showMassage(getContext(), "Data saved");
+            startActivity(new Intent(getContext(), QuestionnaireActivity.class));
+        } else {
+            MyApp.popMessage("Error", o.optJSONArray("data").optString(0), getContext());
+        }
+
+    }
+
+    @Override
+    public void onJsonArrayResponseReceived(JSONArray a, int callNumber) {
+
+    }
+
+    @Override
+    public void onTimeOutRetry(int callNumber) {
+
+    }
+
+    @Override
+    public void onErrorReceived(String error) {
+
+    }
 }

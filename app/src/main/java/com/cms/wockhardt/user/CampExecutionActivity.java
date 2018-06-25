@@ -11,12 +11,22 @@ import android.view.View;
 import android.view.WindowManager;
 
 import com.cms.wockhardt.user.adapters.ExecuteCampsAdapter;
+import com.cms.wockhardt.user.adapters.MyCampsAdapter;
 import com.cms.wockhardt.user.application.MyApp;
+import com.cms.wockhardt.user.models.Camp;
 import com.cms.wockhardt.user.models.Doctor;
+import com.google.gson.Gson;
+import com.loopj.android.http.RequestParams;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 
-public class CampExecutionActivity extends CustomActivity {
+import static com.cms.wockhardt.user.application.AppConstants.BASE_URL;
+import static com.cms.wockhardt.user.application.AppConstants.EMPLOYEE_ID;
+
+public class CampExecutionActivity extends CustomActivity implements CustomActivity.ResponseCallback{
 
     private Toolbar toolbar;
     private RecyclerView rv_list;
@@ -24,6 +34,7 @@ public class CampExecutionActivity extends CustomActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setResponseListener(this);
         setContentView(R.layout.activity_camp_execution);
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -41,14 +52,17 @@ public class CampExecutionActivity extends CustomActivity {
             getWindow().setStatusBarColor(Color.TRANSPARENT);
         }
         setupUiElements();
+
+        RequestParams p = new RequestParams();
+        p.put("user_id", MyApp.getSharedPrefString(EMPLOYEE_ID));
+        postCall(getContext(), BASE_URL + "my-camp", p, "Fetching camp data...", 1);
+
     }
 
     private void setupUiElements() {
         rv_list = findViewById(R.id.rv_list);
         rv_list.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        ExecuteCampsAdapter adapter = new ExecuteCampsAdapter(getContext(), new ArrayList<Doctor>());
-        rv_list.setAdapter(adapter);
     }
 
 
@@ -57,4 +71,33 @@ public class CampExecutionActivity extends CustomActivity {
     }
 
 
+    @Override
+    public void onJsonObjectResponseReceived(JSONObject o, int callNumber) {
+        if (callNumber == 1 && o.optBoolean("status")) {
+            Camp c = new Gson().fromJson(o.toString(), Camp.class);
+            if (c.getData().size() == 0) {
+                MyApp.popFinishableMessage("Message", "No camp created yet", CampExecutionActivity.this);
+            } else {
+                ExecuteCampsAdapter adapter = new ExecuteCampsAdapter(getContext(), c.getData());
+                rv_list.setAdapter(adapter);
+            }
+        } else {
+            MyApp.popFinishableMessage("Error", o.optJSONArray("data").optString(0), CampExecutionActivity.this);
+        }
+    }
+
+    @Override
+    public void onJsonArrayResponseReceived(JSONArray a, int callNumber) {
+
+    }
+
+    @Override
+    public void onTimeOutRetry(int callNumber) {
+
+    }
+
+    @Override
+    public void onErrorReceived(String error) {
+
+    }
 }

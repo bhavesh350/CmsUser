@@ -11,6 +11,9 @@ import android.widget.TextView;
 
 import com.cms.wockhardt.user.CampExecutionClickActivity;
 import com.cms.wockhardt.user.R;
+import com.cms.wockhardt.user.application.MyApp;
+import com.cms.wockhardt.user.application.SingleInstance;
+import com.cms.wockhardt.user.models.Camp;
 import com.cms.wockhardt.user.models.Doctor;
 
 import java.util.List;
@@ -21,20 +24,16 @@ import java.util.List;
 
 public class ExecuteCampsAdapter extends RecyclerView.Adapter<ExecuteCampsAdapter.MyViewHolder> {
 
-    List<Doctor> data;
+    private List<Camp.Data> data;
     private LayoutInflater inflater;
     private Context context;
 
-    public ExecuteCampsAdapter(Context context, List<Doctor> data) {
+    public ExecuteCampsAdapter(Context context, List<Camp.Data> data) {
         this.context = context;
         inflater = LayoutInflater.from(context);
         this.data = data;
     }
 
-    public void delete(int position) {
-        data.remove(position);
-        notifyItemRemoved(position);
-    }
 
     @Override
     public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -45,17 +44,14 @@ public class ExecuteCampsAdapter extends RecyclerView.Adapter<ExecuteCampsAdapte
 
     @Override
     public void onBindViewHolder(MyViewHolder holder, int position) {
-//        String current = data.get(position).getName();
-        holder.txt_name.setText("Doctor " + (position + 1) + " " + "(MSL code)");
-        if (position % 3 == 0) {
+        Camp.Data d = data.get(position);
+        holder.txt_name.setText(d.getDoctor().getName() + " " + "(" + d.getDoctor().getMsl_code() + ")");
+        holder.txt_count.setText(d.getPatient_count() + " Patients");
+        holder.txt_date.setText(MyApp.parseDateFullMonth(d.getCamp_date().split(" ")[0]));
+        if (d.getStatus() == 2 && MyApp.getTodayDate(System.currentTimeMillis()).equals(holder.txt_date.getText().toString())) {
             holder.card_view.setCardBackgroundColor(context.getResources().getColor(R.color.card_green));
-            holder.txt_date.setText("25 June 2018");
-        } else if (position % 3 == 1) {
-            holder.card_view.setCardBackgroundColor(context.getResources().getColor(R.color.card_green));
-            holder.txt_date.setText("20 June 2018");
         } else {
             holder.card_view.setCardBackgroundColor(context.getResources().getColor(R.color.card_gray));
-            holder.txt_date.setText("15 May 2018");
         }
     }
 
@@ -66,6 +62,7 @@ public class ExecuteCampsAdapter extends RecyclerView.Adapter<ExecuteCampsAdapte
 
     class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         TextView txt_name;
+        TextView txt_count;
         TextView txt_date;
         CardView card_view;
 
@@ -74,12 +71,14 @@ public class ExecuteCampsAdapter extends RecyclerView.Adapter<ExecuteCampsAdapte
             txt_name = itemView.findViewById(R.id.txt_name);
             txt_date = itemView.findViewById(R.id.txt_date);
             card_view = itemView.findViewById(R.id.card_view);
+            txt_count = itemView.findViewById(R.id.txt_count);
             itemView.setOnClickListener(this);
         }
 
         @Override
         public void onClick(View v) {
             if (getLayoutPosition() % 3 == 0 || getLayoutPosition() % 3 == 1) {
+                SingleInstance.getInstance().setSelectedCamp(data.get(getLayoutPosition()));
                 context.startActivity(new Intent(context, CampExecutionClickActivity.class));
             }
         }

@@ -82,12 +82,12 @@ public class MyTeamActivity extends CustomActivity {
         return super.onCreateOptionsMenu(menu);
     }
 
-    private List<Doctor> doctorsList = new ArrayList<>();
+    private List<Doctor.Data> doctorsList = new ArrayList<>();
 
     void filter(String text) {
         try {
-            List<Doctor> temp = new ArrayList();
-            for (Doctor d : doctorsList) {
+            List<Doctor.Data> temp = new ArrayList();
+            for (Doctor.Data d : doctorsList) {
                 if (d.getName().toLowerCase().contains(text)) {
                     temp.add(d);
                 }

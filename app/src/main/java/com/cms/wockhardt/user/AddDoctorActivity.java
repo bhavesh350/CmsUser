@@ -13,15 +13,25 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
+import com.cms.wockhardt.user.application.AppConstants;
 import com.cms.wockhardt.user.application.MyApp;
 import com.cms.wockhardt.user.application.SingleInstance;
 import com.cms.wockhardt.user.models.Doctor;
+import com.google.gson.Gson;
+import com.loopj.android.http.RequestParams;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class AddDoctorActivity extends CustomActivity {
+import static com.cms.wockhardt.user.application.AppConstants.BASE_URL;
+import static com.cms.wockhardt.user.application.AppConstants.EMPLOYEE_ID;
+
+public class AddDoctorActivity extends CustomActivity implements CustomActivity.ResponseCallback {
 
     private AutoCompleteTextView edt_name;
     private EditText edt_msl_code;
@@ -29,11 +39,14 @@ public class AddDoctorActivity extends CustomActivity {
     private EditText edt_speciality;
     private EditText edt_city;
     private Toolbar toolbar;
+    private Doctor.Data selectedDoctor = null;
+    private TextView txt_clear_data;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_doctor);
+        setResponseListener(this);
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -53,9 +66,14 @@ public class AddDoctorActivity extends CustomActivity {
             MyApp.setWindowFlag(this, WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS, false);
             getWindow().setStatusBarColor(Color.TRANSPARENT);
         }
+
+        RequestParams p = new RequestParams();
+        p.put("emp_no", MyApp.getSharedPrefString(EMPLOYEE_ID));
+        postCall(getContext(), BASE_URL + "get-all-doctors", p, "", 1);
     }
 
     private void setupUiElements() {
+        txt_clear_data = findViewById(R.id.txt_clear_data);
         edt_name = findViewById(R.id.edt_name);
         edt_name.setThreshold(1);
         edt_msl_code = findViewById(R.id.edt_msl_code);
@@ -64,11 +82,12 @@ public class AddDoctorActivity extends CustomActivity {
         edt_city = findViewById(R.id.edt_city);
 
         setTouchNClick(R.id.btn_submit);
+        setTouchNClick(R.id.txt_clear_data);
 
-        final List<Doctor> dList = MyApp.getApplication().readDoctors();
+        final List<Doctor.Data> dList = MyApp.getApplication().readDoctors();
         String names[] = new String[dList.size()];
         for (int i = 0; i < dList.size(); i++) {
-            names[i] = dList.get(i).getName();
+            names[i] = dList.get(i).getName() + " (" + dList.get(i).getMsl_code() + ")";
         }
         if (dList.size() > 0) {
             ArrayAdapter<String> adapter = new ArrayAdapter<>(this, R.layout.text_spinner, names);
@@ -78,28 +97,14 @@ public class AddDoctorActivity extends CustomActivity {
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                     edt_city.setText(dList.get(position).getCity());
                     edt_mobile.setText(dList.get(position).getMobile());
-                    edt_msl_code.setText(dList.get(position).getMslCode());
+                    edt_msl_code.setText(dList.get(position).getMsl_code());
                     edt_name.setText(dList.get(position).getName());
                     edt_speciality.setText(dList.get(position).getSpeciality());
                     isFromSaved = true;
+                    selectedDoctor = dList.get(position);
                 }
             });
-//            edt_name.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-//                @Override
-//                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-//                    edt_city.setText(dList.get(position).getCity());
-//                    edt_mobile.setText(dList.get(position).getMobile());
-//                    edt_msl_code.setText(dList.get(position).getMslCode());
-//                    edt_name.setText(dList.get(position).getName());
-//                    edt_speciality.setText(dList.get(position).getSpeciality());
-//                    isFromSaved = true;
-//                }
-//
-//                @Override
-//                public void onNothingSelected(AdapterView<?> parent) {
-//
-//                }
-//            });
+
         }
 
     }
@@ -127,11 +132,74 @@ public class AddDoctorActivity extends CustomActivity {
                 return;
             }
 
-            List<Doctor> list = MyApp.getApplication().readDoctors();
-            Doctor d = new Doctor();
+            if (isFromSaved) {
+                SingleInstance.getInstance().setSelectedDoctor(selectedDoctor);
+                finish();
+            } else {
+                RequestParams p = new RequestParams();
+                p.put("user_id", MyApp.getSharedPrefString(AppConstants.EMPLOYEE_ID));
+                p.put("name", edt_name.getText().toString());
+                p.put("unique", edt_msl_code.getText().toString());
+                p.put("mobile", edt_mobile.getText().toString());
+                p.put("speciality", edt_speciality.getText().toString());
+                p.put("city", edt_city.getText().toString());
+
+                postCall(getContext(), AppConstants.BASE_URL + "create-doctor", p, "Creating doctor...", 2);
+            }
+        } else if (v == txt_clear_data) {
+            edt_city.setText("");
+            edt_speciality.setText("");
+            edt_mobile.setText("");
+            edt_msl_code.setText("");
+            edt_name.setText("");
+            isFromSaved = false;
+        }
+    }
+
+    private Context getContext() {
+        return AddDoctorActivity.this;
+    }
+
+    @Override
+    public void onJsonObjectResponseReceived(JSONObject o, int callNumber) {
+        if (callNumber == 1 && o.optBoolean("status")) {
+            Doctor d = new Gson().fromJson(o.toString(), Doctor.class);
+            MyApp.getApplication().writeDoctors(d.getData());
+
+            final List<Doctor.Data> dList = MyApp.getApplication().readDoctors();
+            String names[] = new String[dList.size()];
+            for (int i = 0; i < dList.size(); i++) {
+                names[i] = dList.get(i).getName();
+            }
+            if (dList.size() > 0) {
+                ArrayAdapter<String> adapter = new ArrayAdapter<>(this, R.layout.text_spinner, names);
+                edt_name.setAdapter(adapter);
+                edt_name.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                        edt_city.setText(dList.get(position).getCity());
+                        edt_mobile.setText(dList.get(position).getMobile());
+                        edt_msl_code.setText(dList.get(position).getMsl_code());
+                        edt_name.setText(dList.get(position).getName());
+                        edt_speciality.setText(dList.get(position).getSpeciality());
+                        isFromSaved = true;
+                        selectedDoctor = dList.get(position);
+                    }
+                });
+
+            }
+        } else if (callNumber == 2) {
+            if (o.optBoolean("status")) {
+                Doctor d = new Gson().fromJson(o.toString(), Doctor.class);
+                MyApp.getApplication().writeDoctors(d.getData());
+            } else {
+                MyApp.popMessage("Error", "MSL code already exists", getContext());
+            }
+            List<Doctor.Data> list = MyApp.getApplication().readDoctors();
+            Doctor.Data d = new Doctor().new Data();
             d.setCity(edt_city.getText().toString());
             d.setMobile(edt_mobile.getText().toString());
-            d.setMslCode(edt_msl_code.getText().toString());
+            d.setMsl_code(edt_msl_code.getText().toString());
             d.setSpeciality(edt_speciality.getText().toString());
             d.setName(edt_name.getText().toString());
             if (!isFromSaved) {
@@ -144,8 +212,19 @@ public class AddDoctorActivity extends CustomActivity {
         }
     }
 
-    private Context getContext() {
-        return AddDoctorActivity.this;
+    @Override
+    public void onJsonArrayResponseReceived(JSONArray a, int callNumber) {
+
+    }
+
+    @Override
+    public void onTimeOutRetry(int callNumber) {
+
+    }
+
+    @Override
+    public void onErrorReceived(String error) {
+
     }
 
 

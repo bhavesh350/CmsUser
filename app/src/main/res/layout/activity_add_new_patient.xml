@@ -29,6 +29,7 @@
                 android:textStyle="bold" />
 
             <EditText
+                android:id="@+id/edt_patient_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/edit_bg_rounded"
@@ -50,8 +51,8 @@
                     android:layout_centerVertical="true"
                     android:text="@string/sex"
                     android:textColor="@color/white"
-                    android:textStyle="bold"
-                    android:textSize="16sp" />
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
 
                 <RadioGroup
                     android:id="@+id/radio_group"
@@ -70,8 +71,8 @@
                         android:padding="5dp"
                         android:text="Male"
                         android:textColor="@color/white"
-                        android:textStyle="bold"
-                        android:textSize="16sp" />
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
 
                     <RadioButton
                         android:id="@+id/radio_female"
@@ -81,8 +82,8 @@
                         android:padding="5dp"
                         android:text="Female"
                         android:textColor="@color/white"
-                        android:textStyle="bold"
-                        android:textSize="16sp" />
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
                 </RadioGroup>
             </RelativeLayout>
 
@@ -95,6 +96,7 @@
                 android:textStyle="bold" />
 
             <EditText
+                android:id="@+id/edt_mobile"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/edit_bg_rounded"
@@ -155,10 +157,11 @@
                     android:layout_centerVertical="true"
                     android:text="@string/height"
                     android:textColor="@color/white"
-                    android:textStyle="bold"
-                    android:textSize="16sp" />
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
 
                 <EditText
+                    android:id="@+id/edt_height"
                     android:layout_width="80dp"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="10dp"
@@ -190,8 +193,8 @@
                     android:layout_toLeftOf="@+id/edt_weight"
                     android:text="@string/weight"
                     android:textColor="@color/white"
-                    android:textStyle="bold"
-                    android:textSize="16sp" />
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
             </RelativeLayout>
 
             <RelativeLayout
@@ -206,10 +209,11 @@
                     android:layout_centerVertical="true"
                     android:text="@string/abdominal_circumference"
                     android:textColor="@color/white"
-                    android:textStyle="bold"
-                    android:textSize="16sp" />
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
 
                 <EditText
+                    android:id="@+id/edt_abdo"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="10dp"
@@ -223,11 +227,11 @@
             </RelativeLayout>
 
             <!--<TextView-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:layout_marginTop="15dp"-->
-                <!--android:text="BMI : "-->
-                <!--android:textColor="@color/black" />-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_marginTop="15dp"-->
+            <!--android:text="BMI : "-->
+            <!--android:textColor="@color/black" />-->
         </LinearLayout>
     </ScrollView>
 

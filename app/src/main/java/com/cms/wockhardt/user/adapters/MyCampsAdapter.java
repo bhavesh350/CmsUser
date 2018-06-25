@@ -11,6 +11,7 @@ import android.widget.TextView;
 import com.cms.wockhardt.user.MyCampsActivity;
 import com.cms.wockhardt.user.R;
 import com.cms.wockhardt.user.application.MyApp;
+import com.cms.wockhardt.user.models.Camp;
 import com.cms.wockhardt.user.models.Doctor;
 
 import java.util.List;
@@ -21,11 +22,11 @@ import java.util.List;
 
 public class MyCampsAdapter extends RecyclerView.Adapter<MyCampsAdapter.MyViewHolder> {
 
-    List<Doctor> data;
+    private List<Camp.Data> data;
     private LayoutInflater inflater;
     private Context context;
 
-    public MyCampsAdapter(Context context, List<Doctor> data) {
+    public MyCampsAdapter(Context context, List<Camp.Data> data) {
         this.context = context;
         inflater = LayoutInflater.from(context);
         this.data = data;
@@ -45,11 +46,13 @@ public class MyCampsAdapter extends RecyclerView.Adapter<MyCampsAdapter.MyViewHo
 
     @Override
     public void onBindViewHolder(MyViewHolder holder, int position) {
-//        String current = data.get(position).getName();
-        holder.txt_name.setText("Doctor " + (position + 1) + " " + "(MSL code)");
-        if (position % 3 == 0) {
+        Camp.Data d = data.get(position);
+        holder.txt_name.setText(d.getDoctor().getName() + " " + "(" + d.getDoctor().getMsl_code() + ")");
+        holder.txt_count.setText(d.getPatient_count() + " Patients");
+        holder.txt_date.setText(MyApp.parseDateFullMonth(d.getCamp_date().split(" ")[0]));
+        if (d.getStatus() == 0) {
             holder.card_view.setCardBackgroundColor(context.getResources().getColor(R.color.card_red));
-        } else if (position % 3 == 1) {
+        } else if (d.getStatus() == 2) {
             holder.card_view.setCardBackgroundColor(context.getResources().getColor(R.color.card_green));
         } else {
             holder.card_view.setCardBackgroundColor(context.getResources().getColor(R.color.card_yellow));
@@ -58,16 +61,18 @@ public class MyCampsAdapter extends RecyclerView.Adapter<MyCampsAdapter.MyViewHo
 
     @Override
     public int getItemCount() {
-        return 10;
+        return data.size();
     }
 
     class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         TextView txt_name;
         TextView txt_date;
+        TextView txt_count;
         CardView card_view;
 
         public MyViewHolder(View itemView) {
             super(itemView);
+            txt_count = itemView.findViewById(R.id.txt_count);
             txt_name = itemView.findViewById(R.id.txt_name);
             txt_date = itemView.findViewById(R.id.txt_date);
             card_view = itemView.findViewById(R.id.card_view);
@@ -77,7 +82,7 @@ public class MyCampsAdapter extends RecyclerView.Adapter<MyCampsAdapter.MyViewHo
         @Override
         public void onClick(View v) {
             if (((MyCampsActivity) context).amIRm && getLayoutPosition() % 3 == 2) {
-                ((MyCampsActivity)context).openApprovalCampDialog();
+                ((MyCampsActivity) context).openApprovalCampDialog();
             }
         }
     }

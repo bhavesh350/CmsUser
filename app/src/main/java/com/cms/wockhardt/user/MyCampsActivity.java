@@ -23,16 +23,23 @@ import com.cms.wockhardt.user.application.AppConstants;
 import com.cms.wockhardt.user.application.MyApp;
 import com.cms.wockhardt.user.models.Camp;
 import com.cms.wockhardt.user.models.Doctor;
+import com.google.gson.Gson;
+import com.loopj.android.http.RequestParams;
 import com.williamww.silkysignature.views.SignaturePad;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class MyCampsActivity extends CustomActivity {
+import static com.cms.wockhardt.user.application.AppConstants.BASE_URL;
+import static com.cms.wockhardt.user.application.AppConstants.EMPLOYEE_ID;
+
+public class MyCampsActivity extends CustomActivity implements CustomActivity.ResponseCallback {
 
     private RecyclerView rv_list;
     private Toolbar toolbar;
-    private List<Camp> campList = new ArrayList<>();
     public boolean amIRm = false;
 
 
@@ -40,7 +47,7 @@ public class MyCampsActivity extends CustomActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_listing);
-
+        setResponseListener(this);
         amIRm = getIntent().getBooleanExtra(AppConstants.EXTRA, false);
 
         toolbar = findViewById(R.id.toolbar);
@@ -65,14 +72,16 @@ public class MyCampsActivity extends CustomActivity {
             MyApp.setWindowFlag(this, WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS, false);
             getWindow().setStatusBarColor(Color.TRANSPARENT);
         }
+
+        RequestParams p = new RequestParams();
+        p.put("user_id", MyApp.getSharedPrefString(EMPLOYEE_ID));
+        postCall(getContext(), BASE_URL + "my-camp", p, "Fetching camp data...", 1);
     }
 
     private void setupUiElements() {
         rv_list = findViewById(R.id.rv_list);
         rv_list.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        MyCampsAdapter adapter = new MyCampsAdapter(getContext(), new ArrayList<Doctor>());
-        rv_list.setAdapter(adapter);
     }
 
 
@@ -114,5 +123,35 @@ public class MyCampsActivity extends CustomActivity {
 //        lp.height = -1;
 //        dialog.getWindow().setAttributes(lp);
         dialog.show();
+    }
+
+    @Override
+    public void onJsonObjectResponseReceived(JSONObject o, int callNumber) {
+        if (callNumber == 1 && o.optBoolean("status")) {
+            Camp c = new Gson().fromJson(o.toString(), Camp.class);
+            if (c.getData().size() == 0) {
+                MyApp.popFinishableMessage("Message", "No camp created yet", MyCampsActivity.this);
+            } else {
+                MyCampsAdapter adapter = new MyCampsAdapter(getContext(), c.getData());
+                rv_list.setAdapter(adapter);
+            }
+        } else {
+            MyApp.popFinishableMessage("Error", o.optJSONArray("data").optString(0), MyCampsActivity.this);
+        }
+    }
+
+    @Override
+    public void onJsonArrayResponseReceived(JSONArray a, int callNumber) {
+
+    }
+
+    @Override
+    public void onTimeOutRetry(int callNumber) {
+
+    }
+
+    @Override
+    public void onErrorReceived(String error) {
+
     }
 }

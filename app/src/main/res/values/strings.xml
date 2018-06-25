@@ -58,4 +58,7 @@
     <string name="my_team">My Team</string>
     <string name="camp_approval">Camp Approval</string>
     <string name="camp_history">Camp History</string>
+    <string name="generate_password">Generate Password</string>
+    <string name="something_wrong">Something went wrong</string>
+    <string name="no_data_avail">No data available</string>
 </resources>
