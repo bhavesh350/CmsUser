@@ -12,7 +12,10 @@ import android.widget.RelativeLayout;
 import com.cms.wockhardt.user.application.AppConstants;
 import com.cms.wockhardt.user.application.MyApp;
 
-public class ZsmSmMainActivity extends CustomActivity {
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+public class ZsmSmMainActivity extends CustomActivity implements CustomActivity.ResponseCallback{
 
     //    private Toolbar toolbar;
     private RelativeLayout rl_camp_approval;
@@ -20,6 +23,7 @@ public class ZsmSmMainActivity extends CustomActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setResponseListener(this);
         setContentView(R.layout.activity_zsm_main);
         if (Build.VERSION.SDK_INT >= 19 && Build.VERSION.SDK_INT < 21) {
             MyApp.setWindowFlag(this, WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS, true);
@@ -49,13 +53,12 @@ public class ZsmSmMainActivity extends CustomActivity {
     public void onClick(View v) {
         super.onClick(v);
         if (v.getId() == R.id.btn_my_team) {
-//            startActivity(new Intent(getContext(), MyTeamActivity.class).putExtra(AppConstants.EXTRA, false));
+            startActivity(new Intent(getContext(), MyTeamActivity.class).putExtra(AppConstants.EXTRA, false));
         } else if (v.getId() == R.id.btn_camp_history) {
             startActivity(new Intent(getContext(), CampHistoryZSMActivity
-
                     .class).putExtra(AppConstants.EXTRA, true));
         } else if (v.getId() == R.id.btn_notification) {
-
+            startActivity(new Intent(getContext(),NotificationsActivity.class));
         } else if (v.getId() == R.id.btn_leaderboard) {
 
         } else if (v.getId() == R.id.txt_logout) {
@@ -67,5 +70,25 @@ public class ZsmSmMainActivity extends CustomActivity {
 
     private Context getContext() {
         return ZsmSmMainActivity.this;
+    }
+
+    @Override
+    public void onJsonObjectResponseReceived(JSONObject o, int callNumber) {
+
+    }
+
+    @Override
+    public void onJsonArrayResponseReceived(JSONArray a, int callNumber) {
+
+    }
+
+    @Override
+    public void onTimeOutRetry(int callNumber) {
+
+    }
+
+    @Override
+    public void onErrorReceived(String error) {
+
     }
 }

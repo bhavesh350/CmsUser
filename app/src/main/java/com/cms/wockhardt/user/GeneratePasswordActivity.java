@@ -10,13 +10,16 @@ import android.view.WindowManager;
 import android.widget.EditText;
 
 import com.cms.wockhardt.user.application.MyApp;
+import com.loopj.android.http.RequestParams;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.HashMap;
 
-public class GeneratePasswordActivity extends CustomActivity implements CustomActivity.ResponseCallback{
+import static com.cms.wockhardt.user.application.AppConstants.BASE_URL;
+
+public class GeneratePasswordActivity extends CustomActivity implements CustomActivity.ResponseCallback {
 
     private Toolbar toolbar;
     private EditText edt_password;
@@ -73,10 +76,11 @@ public class GeneratePasswordActivity extends CustomActivity implements CustomAc
                 return;
             }
 
-            MyApp.spinnerStart(getContext(), "Generating password...");
-            HashMap<String, String> params = new HashMap<>();
-            params.put("emp_no", edt_emp_id.getText().toString());
-            params.put("password", edt_password.getText().toString());
+
+            RequestParams p = new RequestParams();
+            p.put("emp_no", edt_emp_id.getText().toString());
+            p.put("password", edt_password.getText().toString());
+            postCall(getContext(), BASE_URL + "generate-password", p, "Generating Password", 1);
         }
     }
 
@@ -87,7 +91,13 @@ public class GeneratePasswordActivity extends CustomActivity implements CustomAc
 
     @Override
     public void onJsonObjectResponseReceived(JSONObject o, int callNumber) {
-
+        if (callNumber == 1) {
+            if (o.optBoolean("status")) {
+                MyApp.popFinishableMessage("Success", "Your password has been generated successfully, Please login to your profile now.\nThank you", GeneratePasswordActivity.this);
+            } else {
+                MyApp.popMessage("Error", o.optJSONArray("data").optString(0), getContext());
+            }
+        }
     }
 
     @Override
@@ -102,6 +112,6 @@ public class GeneratePasswordActivity extends CustomActivity implements CustomAc
 
     @Override
     public void onErrorReceived(String error) {
-
+        MyApp.popMessage("Error", error, getContext());
     }
 }

@@ -118,13 +118,21 @@ public class LoginActivity extends CustomActivity implements CustomActivity.Resp
     public void onJsonObjectResponseReceived(JSONObject o, int callNumber) {
         if (callNumber == 1) {
             if (o.optBoolean("status")) {
+
                 User user = new Gson().fromJson(o.toString(), User.class);
-                startActivity(new Intent(getContext(), MainActivity.class).putExtra("UserType",
-                        spinner_designation.getSelectedItemPosition()));
-                MyApp.getApplication().writeUser(user);
-                MyApp.setSharedPrefString(AppConstants.EMPLOYEE_ID, user.getData().getEmp_no() + "");
-                MyApp.setStatus(AppConstants.IS_LOGIN, true);
-                finish();
+                if (user.getData().getDesignation().equals(spinner_designation.getSelectedItem().toString())) {
+                    startActivity(new Intent(getContext(), MainActivity.class).putExtra("UserType",
+                            spinner_designation.getSelectedItemPosition()));
+                    MyApp.getApplication().writeUser(user);
+                    MyApp.setSharedPrefString(AppConstants.EMPLOYEE_ID, user.getData().getEmp_no() + "");
+                    MyApp.setStatus(AppConstants.IS_LOGIN, true);
+                    finish();
+                } else {
+                    MyApp.popMessage("Error!", "You are registered as a "
+                            + user.getData().getDesignation() + " But you are trying to login as a " +
+                            spinner_designation.getSelectedItem().toString(), getContext());
+                }
+
             } else {
                 MyApp.popMessage("Error", o.optJSONArray("data").optString(0), getContext());
             }

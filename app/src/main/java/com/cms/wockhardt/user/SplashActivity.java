@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 
 import com.cms.wockhardt.user.application.AppConstants;
 import com.cms.wockhardt.user.application.MyApp;
+import com.cms.wockhardt.user.models.MyTeam;
 
 public class SplashActivity extends AppCompatActivity {
 
@@ -20,7 +21,7 @@ public class SplashActivity extends AppCompatActivity {
             @Override
             public void run() {
                 if (MyApp.getStatus(AppConstants.IS_LOGIN)) {
-                    startActivity(new Intent(getContext(), MainActivity.class));
+                    startActivity(new Intent(getContext(), MainActivity.class).putExtra("UserType", getUserType()));
                     finish();
                 } else {
                     startActivity(new Intent(getContext(), LoginActivity.class));
@@ -29,6 +30,31 @@ public class SplashActivity extends AppCompatActivity {
 
             }
         }, 1500);
+    }
+
+    private int getUserType() {
+        int type = 0;
+        switch (MyApp.getApplication().readUser().getData().getDesignation()) {
+            case "TM":
+                type = 0;
+                break;
+            case "RM":
+                type = 1;
+                break;
+            case "ZSM":
+                type = 2;
+                break;
+            case "SM":
+                type = 3;
+                break;
+            case "NSM":
+                type = 4;
+                break;
+            default:
+                type = 0;
+                break;
+        }
+        return type;
     }
 
     private Context getContext() {

@@ -77,6 +77,7 @@ public class CreatePlanActivity extends CustomActivity implements CustomActivity
         txt_doctor_details = findViewById(R.id.txt_doctor_details);
         setClick(R.id.txt_date);
         setClick(R.id.txt_doctor_details);
+        setClick(R.id.btn_submit);
 
     }
 
@@ -86,6 +87,8 @@ public class CreatePlanActivity extends CustomActivity implements CustomActivity
         if (v.getId() == R.id.txt_date) {
             dateDialog();
         } else if (v.getId() == R.id.txt_doctor_details) {
+            startActivity(new Intent(getContext(), AddDoctorActivity.class));
+        } else if (v.getId() == R.id.btn_submit) {
             if (SingleInstance.getInstance().getSelectedDoctor() == null) {
                 MyApp.popMessage("Alert", "Please add a doctor", getContext());
                 return;
@@ -106,7 +109,7 @@ public class CreatePlanActivity extends CustomActivity implements CustomActivity
                         public void onClick(DialogInterface dialog, int which) {
                             dialog.dismiss();
                             RequestParams p = new RequestParams();
-                            p.put("user_id", MyApp.getSharedPrefString(EMPLOYEE_ID));
+                            p.put("user_id", MyApp.getApplication().readUser().getData().getId());
                             p.put("msl_code", SingleInstance.getInstance().getSelectedDoctor().getMsl_code());
                             p.put("camp_date", createCampData);
                             p.put("patient_count", edt_patient_count.getText().toString());
@@ -145,9 +148,9 @@ public class CreatePlanActivity extends CustomActivity implements CustomActivity
 
     public String parseDate(String time) {
         Log.e("Date", "parseDateToHHMM: " + time);
-        String inputPattern = "DD-M-yyyy";
+        String inputPattern = "d-M-yyyy";
         String outputPattern = "d MMM, yyyy";
-        String outputPatternServer = "mm/dd/yyyy";
+        String outputPatternServer = "yyyy-MM-dd";//2018-06-18
         SimpleDateFormat inputFormat = new SimpleDateFormat(inputPattern);
         SimpleDateFormat outputFormat = new SimpleDateFormat(outputPattern);
         SimpleDateFormat outputFormatServer = new SimpleDateFormat(outputPatternServer);

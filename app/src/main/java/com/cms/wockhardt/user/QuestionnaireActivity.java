@@ -115,22 +115,14 @@ public class QuestionnaireActivity extends CustomActivity {
 
             @Override
             public void onSigned() {
-//Event triggered when the pad is signed
 
             }
 
             @Override
             public void onClear() {
-//Event triggered when the pad is cleared
             }
         });
 
-//        dialog.show();
-//        WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
-//        lp.copyFrom(dialog.getWindow().getAttributes());
-//        lp.width = -1;
-//        lp.height = -1;
-//        dialog.getWindow().setAttributes(lp);
         dialog.show();
     }
 

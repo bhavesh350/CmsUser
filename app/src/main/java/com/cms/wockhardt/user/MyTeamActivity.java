@@ -1,6 +1,7 @@
 package com.cms.wockhardt.user;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
@@ -16,20 +17,34 @@ import android.view.WindowManager;
 import com.cms.wockhardt.user.adapters.MyTeamAdapter;
 import com.cms.wockhardt.user.application.AppConstants;
 import com.cms.wockhardt.user.application.MyApp;
+import com.cms.wockhardt.user.application.SingleInstance;
 import com.cms.wockhardt.user.models.Doctor;
+import com.cms.wockhardt.user.models.MyTeam;
+import com.google.gson.Gson;
+import com.loopj.android.http.RequestParams;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class MyTeamActivity extends CustomActivity {
+import static com.cms.wockhardt.user.application.AppConstants.BASE_URL;
+
+public class MyTeamActivity extends CustomActivity implements CustomActivity.ResponseCallback {
 
     private RecyclerView rv_list;
     private Toolbar toolbar;
     public boolean isGoNext = false;
+    private boolean isNextLevel;
+    private int myId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setResponseListener(this);
+        isNextLevel = getIntent().getBooleanExtra("isNext", false);
+        myId = getIntent().getIntExtra("myId", 0);
         setContentView(R.layout.activity_listing);
         isGoNext = getIntent().getBooleanExtra(AppConstants.EXTRA, false);
         toolbar = findViewById(R.id.toolbar);
@@ -49,13 +64,22 @@ public class MyTeamActivity extends CustomActivity {
             MyApp.setWindowFlag(this, WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS, false);
             getWindow().setStatusBarColor(Color.TRANSPARENT);
         }
+
+        RequestParams p = new RequestParams();
+        if (isNextLevel) {
+            MyTeamAdapter adapter = new MyTeamAdapter(getContext(), SingleInstance.getInstance().getNextTeam());
+            rv_list.setAdapter(adapter);
+        } else {
+            p.put("user_id", MyApp.getApplication().readUser().getData().getId());
+            postCall(getContext(), BASE_URL + "my-team", p, "Loading team data...", 1);
+        }
+
     }
 
     private void setupUiElements() {
         rv_list = findViewById(R.id.rv_list);
         rv_list.setLayoutManager(new LinearLayoutManager(getContext()));
-        MyTeamAdapter adapter = new MyTeamAdapter(getContext(), new ArrayList<Doctor>());
-        rv_list.setAdapter(adapter);
+
     }
 
     @Override
@@ -111,4 +135,36 @@ public class MyTeamActivity extends CustomActivity {
     }
 
 
+    @Override
+    public void onJsonObjectResponseReceived(JSONObject o, int callNumber) {
+        if (callNumber == 1 && o.optBoolean("status")) {
+            MyTeam team = new Gson().fromJson(o.toString(), MyTeam.class);
+            MyTeamAdapter adapter = new MyTeamAdapter(getContext(), team.getData().get(0).getChild());
+            rv_list.setAdapter(adapter);
+        } else {
+            MyApp.popMessage("Error", o.optJSONArray("data").optString(0), getContext());
+        }
+    }
+
+    @Override
+    public void onJsonArrayResponseReceived(JSONArray a, int callNumber) {
+
+    }
+
+    @Override
+    public void onTimeOutRetry(int callNumber) {
+
+    }
+
+    @Override
+    public void onErrorReceived(String error) {
+        MyApp.popMessage("Error", error, getContext());
+    }
+
+    public void goNextLevel(MyTeam.Data team, boolean isNextLevel) {
+        if (isNextLevel) {
+            startActivity(new Intent(getContext(), MyTeamActivity.class).putExtra("myId", team.getId())
+                    .putExtra("isNext", true));
+        }
+    }
 }

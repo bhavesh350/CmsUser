@@ -54,7 +54,7 @@ public class CampExecutionActivity extends CustomActivity implements CustomActiv
         setupUiElements();
 
         RequestParams p = new RequestParams();
-        p.put("user_id", MyApp.getSharedPrefString(EMPLOYEE_ID));
+        p.put("user_id", MyApp.getApplication().readUser().getData().getId());
         postCall(getContext(), BASE_URL + "my-camp", p, "Fetching camp data...", 1);
 
     }

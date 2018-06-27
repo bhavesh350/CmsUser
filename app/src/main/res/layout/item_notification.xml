@@ -9,7 +9,7 @@
     android:layout_marginTop="10dp"
     android:clipChildren="false"
     android:clipToPadding="false"
-    card_view:cardBackgroundColor="@color/card_primary"
+    card_view:cardBackgroundColor="@color/white"
     card_view:cardElevation="10dp"
     card_view:cardPreventCornerOverlap="false">
 
@@ -19,32 +19,37 @@
         android:orientation="vertical">
 
         <TextView
-            android:id="@+id/txt_name"
-            android:layout_width="wrap_content"
+            android:id="@+id/txt_title"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_below="@+id/txt_date"
+            android:gravity="center"
             android:padding="10dp"
-            android:text="Doctor Name (msl code)"
+            android:text=""
             android:textColor="@color/colorPrimaryDark"
-            android:textSize="18sp" />
+            android:textSize="18sp"
+            android:textStyle="bold" />
 
         <TextView
-            android:id="@+id/txt_emp_id"
+            android:id="@+id/txt_date"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
-            android:padding="10dp"
+            android:layout_marginBottom="-10dp"
+            android:alpha=".6"
+            android:paddingRight="10dp"
             android:text="(msl code)"
             android:textColor="@color/black"
-            android:textSize="18sp" />
+            android:textSize="15sp" />
 
         <TextView
-            android:layout_marginTop="-8dp"
-            android:id="@+id/txt_head_quarter"
+            android:id="@+id/txt_body"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/txt_name"
-            android:paddingLeft="10dp"
+            android:layout_below="@+id/txt_title"
+            android:layout_marginTop="-8dp"
             android:paddingBottom="10dp"
+            android:paddingLeft="10dp"
             android:text=""
             android:textColor="@color/black"
             android:textSize="18sp" />

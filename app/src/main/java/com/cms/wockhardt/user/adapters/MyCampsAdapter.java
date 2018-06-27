@@ -22,7 +22,7 @@ import java.util.List;
 
 public class MyCampsAdapter extends RecyclerView.Adapter<MyCampsAdapter.MyViewHolder> {
 
-    private List<Camp.Data> data;
+    public List<Camp.Data> data;
     private LayoutInflater inflater;
     private Context context;
 
@@ -81,8 +81,8 @@ public class MyCampsAdapter extends RecyclerView.Adapter<MyCampsAdapter.MyViewHo
 
         @Override
         public void onClick(View v) {
-            if (((MyCampsActivity) context).amIRm && getLayoutPosition() % 3 == 2) {
-                ((MyCampsActivity) context).openApprovalCampDialog();
+            if (data.get(getLayoutPosition()).getStatus() == 1) {
+                ((MyCampsActivity) context).openApprovalCampDialog(data.get(getLayoutPosition()).getId(), getLayoutPosition());
             }
         }
     }

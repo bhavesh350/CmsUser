@@ -13,7 +13,9 @@ import com.cms.wockhardt.user.MyCampsActivity;
 import com.cms.wockhardt.user.MyTeamActivity;
 import com.cms.wockhardt.user.R;
 import com.cms.wockhardt.user.application.AppConstants;
+import com.cms.wockhardt.user.application.SingleInstance;
 import com.cms.wockhardt.user.models.Doctor;
+import com.cms.wockhardt.user.models.MyTeam;
 
 import java.util.List;
 
@@ -23,20 +25,16 @@ import java.util.List;
 
 public class MyTeamAdapter extends RecyclerView.Adapter<MyTeamAdapter.MyViewHolder> {
 
-    List<Doctor> data;
+    List<MyTeam.Data> data;
     private LayoutInflater inflater;
     private Context context;
 
-    public MyTeamAdapter(Context context, List<Doctor> data) {
+    public MyTeamAdapter(Context context, List<MyTeam.Data> data) {
         this.context = context;
         inflater = LayoutInflater.from(context);
         this.data = data;
     }
 
-    public void delete(int position) {
-        data.remove(position);
-        notifyItemRemoved(position);
-    }
 
     @Override
     public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -48,29 +46,41 @@ public class MyTeamAdapter extends RecyclerView.Adapter<MyTeamAdapter.MyViewHold
     @Override
     public void onBindViewHolder(MyViewHolder holder, int position) {
 //        String current = data.get(position).getName();
-        holder.txt_name.setText("EMP-00" + (position + 1) + " ," + " Name, HQ");
+        holder.txt_name.setText(data.get(position).getName());
+        holder.txt_emp_id.setText(data.get(position).getEmp_no() + "");
+        holder.txt_head_quarter.setText(data.get(position).getHq());
 
     }
 
     @Override
     public int getItemCount() {
-        return 10;
+        return data.size();
     }
 
     class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         TextView txt_name;
+        TextView txt_head_quarter;
+        TextView txt_emp_id;
 
         public MyViewHolder(View itemView) {
             super(itemView);
+            txt_emp_id = itemView.findViewById(R.id.txt_emp_id);
             txt_name = itemView.findViewById(R.id.txt_name);
+            txt_head_quarter = itemView.findViewById(R.id.txt_head_quarter);
             itemView.setOnClickListener(this);
         }
 
         @Override
         public void onClick(View v) {
             try {
-                if (((MyTeamActivity) context).isGoNext) {
-                    context.startActivity(new Intent(context, MyCampsActivity.class).putExtra(AppConstants.EXTRA, true));
+                if (data.get(getLayoutPosition()).getDesignation().equals("TM")) {
+                    context.startActivity(new Intent(context, MyCampsActivity.class).putExtra(AppConstants.EXTRA, true)
+                            .putExtra("myId", data.get(getLayoutPosition()).getId()));
+                } else {
+                    if (data.get(getLayoutPosition()).getChild().size() > 0) {
+                        SingleInstance.getInstance().setNextTeam(data.get(getLayoutPosition()).getChild());
+                        ((MyTeamActivity) context).goNextLevel(data.get(getLayoutPosition()), true);
+                    }
                 }
             } catch (Exception e) {
             }

@@ -57,7 +57,7 @@ public class ExecuteCampsAdapter extends RecyclerView.Adapter<ExecuteCampsAdapte
 
     @Override
     public int getItemCount() {
-        return 10;
+        return data.size();
     }
 
     class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -77,10 +77,17 @@ public class ExecuteCampsAdapter extends RecyclerView.Adapter<ExecuteCampsAdapte
 
         @Override
         public void onClick(View v) {
-            if (getLayoutPosition() % 3 == 0 || getLayoutPosition() % 3 == 1) {
+            if (data.get(getLayoutPosition()).getStatus() == 2 &&
+                    MyApp.getTodayDate(System.currentTimeMillis()).equals(MyApp.parseDateFullMonth(
+                            data.get(getLayoutPosition()).getCamp_date().split(" ")[0]))) {
                 SingleInstance.getInstance().setSelectedCamp(data.get(getLayoutPosition()));
                 context.startActivity(new Intent(context, CampExecutionClickActivity.class));
+            } else {
+                if (data.get(getLayoutPosition()).getStatus() == 2) {
+                    MyApp.popMessage("Alert", "Your camp is not approved yet.", context);
+                }
             }
+
         }
     }
 }

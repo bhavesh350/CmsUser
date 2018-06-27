@@ -137,9 +137,9 @@ public class AddDoctorActivity extends CustomActivity implements CustomActivity.
                 finish();
             } else {
                 RequestParams p = new RequestParams();
-                p.put("user_id", MyApp.getSharedPrefString(AppConstants.EMPLOYEE_ID));
+                p.put("user_id", MyApp.getApplication().readUser().getData().getId());
                 p.put("name", edt_name.getText().toString());
-                p.put("unique", edt_msl_code.getText().toString());
+                p.put("msl_code", edt_msl_code.getText().toString());
                 p.put("mobile", edt_mobile.getText().toString());
                 p.put("speciality", edt_speciality.getText().toString());
                 p.put("city", edt_city.getText().toString());
@@ -202,10 +202,7 @@ public class AddDoctorActivity extends CustomActivity implements CustomActivity.
             d.setMsl_code(edt_msl_code.getText().toString());
             d.setSpeciality(edt_speciality.getText().toString());
             d.setName(edt_name.getText().toString());
-            if (!isFromSaved) {
-                list.add(d);
-                MyApp.getApplication().writeDoctors(list);
-            }
+
 
             SingleInstance.getInstance().setSelectedDoctor(d);
             finish();
@@ -224,7 +221,7 @@ public class AddDoctorActivity extends CustomActivity implements CustomActivity.
 
     @Override
     public void onErrorReceived(String error) {
-
+        MyApp.popMessage("Error!", error, getContext());
     }
 
 

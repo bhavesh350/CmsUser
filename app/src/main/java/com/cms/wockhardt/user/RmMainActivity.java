@@ -53,7 +53,7 @@ public class RmMainActivity extends CustomActivity {
         } else if (v.getId() == R.id.btn_camp_history) {
             startActivity(new Intent(getContext(), CampHistoryActivity.class).putExtra(AppConstants.EXTRA, true));
         } else if (v.getId() == R.id.btn_notification) {
-
+            startActivity(new Intent(getContext(), NotificationsActivity.class));
         } else if (v.getId() == R.id.btn_leaderboard) {
 
         } else if (v.getId() == R.id.txt_logout) {

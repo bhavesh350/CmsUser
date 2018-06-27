@@ -584,8 +584,26 @@ public class MyApp extends Application {
 
 
     public static String parseDateFullMonth(String time) {
-        String inputPattern = "yyyy-mm-dd";
+        String inputPattern = "yyyy-MM-dd";
         String outputPattern = "dd MMMM yyyy";
+        SimpleDateFormat inputFormat = new SimpleDateFormat(inputPattern);
+        SimpleDateFormat outputFormat = new SimpleDateFormat(outputPattern);
+
+        Date date = null;
+        String str = null;
+
+        try {
+            date = inputFormat.parse(time);
+            str = outputFormat.format(date);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return str;
+    }
+
+    public static String parseDateSortDate(String time) {
+        String inputPattern = "yyyy-MM-dd HH:mm:ss";//2018-06-25 13:40:38
+        String outputPattern = "dd MMM hh:mm a";
         SimpleDateFormat inputFormat = new SimpleDateFormat(inputPattern);
         SimpleDateFormat outputFormat = new SimpleDateFormat(outputPattern);
 

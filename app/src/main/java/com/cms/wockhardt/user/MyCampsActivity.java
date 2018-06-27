@@ -41,7 +41,7 @@ public class MyCampsActivity extends CustomActivity implements CustomActivity.Re
     private RecyclerView rv_list;
     private Toolbar toolbar;
     public boolean amIRm = false;
-
+    MyCampsAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,14 +67,15 @@ public class MyCampsActivity extends CustomActivity implements CustomActivity.Re
             getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
         }
         if (Build.VERSION.SDK_INT >= 21) {
-//            RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) toolbar.getLayoutParams();
-//            lp.setMargins(0, MyApp.getApplication().getStatusBarHeight(), 0, -MyApp.getApplication().getStatusBarHeight());
             MyApp.setWindowFlag(this, WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS, false);
             getWindow().setStatusBarColor(Color.TRANSPARENT);
         }
 
         RequestParams p = new RequestParams();
-        p.put("user_id", MyApp.getSharedPrefString(EMPLOYEE_ID));
+        if (amIRm)
+            p.put("user_id", getIntent().getIntExtra("myId", 0));
+        else
+            p.put("user_id", MyApp.getApplication().readUser().getData().getId());
         postCall(getContext(), BASE_URL + "my-camp", p, "Fetching camp data...", 1);
     }
 
@@ -89,8 +90,14 @@ public class MyCampsActivity extends CustomActivity implements CustomActivity.Re
         return MyCampsActivity.this;
     }
 
+    private int positionTo;
 
-    public void openApprovalCampDialog() {
+    public void openApprovalCampDialog(final int id, final int position) {
+        positionTo = position;
+        if (!MyApp.getApplication().readUser().getData().getDesignation().equals("RM")) {
+            MyApp.popMessage("Alert", "You do not have permission to accept or reject camp.", getContext());
+            return;
+        }
         final Dialog dialog = new Dialog(getContext());
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.parseColor("#00ffffff")));
@@ -105,6 +112,10 @@ public class MyCampsActivity extends CustomActivity implements CustomActivity.Re
             public void onClick(View v) {
                 dialog.dismiss();
                 MyApp.showMassage(getContext(), "Color will be change based on the real data.");
+                RequestParams p = new RequestParams();
+                p.put("camp_id", id);
+                p.put("status", 2);
+                postCall(getContext(), BASE_URL + "camp-response", p, "Approving...", 2);
             }
         });
 
@@ -112,16 +123,13 @@ public class MyCampsActivity extends CustomActivity implements CustomActivity.Re
             @Override
             public void onClick(View v) {
                 dialog.dismiss();
+                RequestParams p = new RequestParams();
+                p.put("camp_id", id);
+                p.put("status", 0);
+                postCall(getContext(), BASE_URL + "camp-response", p, "Rejecting...", 2);
             }
         });
 
-
-//        dialog.show();
-//        WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
-//        lp.copyFrom(dialog.getWindow().getAttributes());
-//        lp.width = -1;
-//        lp.height = -1;
-//        dialog.getWindow().setAttributes(lp);
         dialog.show();
     }
 
@@ -132,9 +140,12 @@ public class MyCampsActivity extends CustomActivity implements CustomActivity.Re
             if (c.getData().size() == 0) {
                 MyApp.popFinishableMessage("Message", "No camp created yet", MyCampsActivity.this);
             } else {
-                MyCampsAdapter adapter = new MyCampsAdapter(getContext(), c.getData());
+                adapter = new MyCampsAdapter(getContext(), c.getData());
                 rv_list.setAdapter(adapter);
             }
+        } else if (callNumber == 2 && o.optBoolean("status")) {
+            adapter.data.get(positionTo).setStatus(o.optJSONObject("data").optInt("status"));
+            adapter.notifyDataSetChanged();
         } else {
             MyApp.popFinishableMessage("Error", o.optJSONArray("data").optString(0), MyCampsActivity.this);
         }
@@ -152,6 +163,6 @@ public class MyCampsActivity extends CustomActivity implements CustomActivity.Re
 
     @Override
     public void onErrorReceived(String error) {
-
+        MyApp.popMessage("Error", error, getContext());
     }
 }
