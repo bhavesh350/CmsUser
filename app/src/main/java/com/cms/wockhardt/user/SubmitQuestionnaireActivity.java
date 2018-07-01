@@ -16,6 +16,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.cms.wockhardt.user.adapters.QuestionnaireAdapter;
 import com.cms.wockhardt.user.application.MyApp;
@@ -27,6 +28,7 @@ import java.util.ArrayList;
 public class SubmitQuestionnaireActivity extends CustomActivity {
 
     private Toolbar toolbar;
+    private TextView txt_score;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,10 +53,10 @@ public class SubmitQuestionnaireActivity extends CustomActivity {
     }
 
     private void setupUiElements() {
+        txt_score = findViewById(R.id.txt_score);
         setTouchNClick(R.id.btn_share);
         setTouchNClick(R.id.btn_next_patient);
         setTouchNClick(R.id.btn_finish_camp);
-
     }
 
     @Override

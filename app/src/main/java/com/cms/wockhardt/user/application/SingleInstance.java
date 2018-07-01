@@ -3,6 +3,7 @@ package com.cms.wockhardt.user.application;
 import com.cms.wockhardt.user.models.Camp;
 import com.cms.wockhardt.user.models.Doctor;
 import com.cms.wockhardt.user.models.MyTeam;
+import com.cms.wockhardt.user.models.Patient;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,6 +12,25 @@ public class SingleInstance {
     private static final SingleInstance ourInstance = new SingleInstance();
 
     private Doctor.Data selectedDoctor = null;
+    private Patient.Data patient;
+    private Patient.Question currentQuestionReport;
+
+    public Patient.Question getCurrentQuestionReport() {
+        return currentQuestionReport;
+    }
+
+    public void setCurrentQuestionReport(Patient.Question currentQuestionReport) {
+        this.currentQuestionReport = currentQuestionReport;
+    }
+
+    public Patient.Data getPatient() {
+        return patient;
+    }
+
+    public void setPatient(Patient.Data patient) {
+        this.patient = patient;
+    }
+
     private Camp.Data selectedCamp = null;
     private List<MyTeam.Data> nextTeam = new ArrayList<>();
 

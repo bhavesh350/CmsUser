@@ -1,6 +1,7 @@
 package com.cms.wockhardt.user.adapters;
 
 import android.content.Context;
+import android.icu.util.CurrencyAmount;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -9,7 +10,9 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.cms.wockhardt.user.R;
+import com.cms.wockhardt.user.models.Camp;
 import com.cms.wockhardt.user.models.Doctor;
+import com.cms.wockhardt.user.models.Patient;
 
 import java.util.List;
 
@@ -19,11 +22,11 @@ import java.util.List;
 
 public class CampHistoryDetailsAdapter extends RecyclerView.Adapter<CampHistoryDetailsAdapter.MyViewHolder> {
 
-    List<Doctor> data;
+    List<Camp.Data> data;
     private LayoutInflater inflater;
     private Context context;
 
-    public CampHistoryDetailsAdapter(Context context, List<Doctor> data) {
+    public CampHistoryDetailsAdapter(Context context, List<Camp.Data> data) {
         this.context = context;
         inflater = LayoutInflater.from(context);
         this.data = data;
@@ -45,18 +48,12 @@ public class CampHistoryDetailsAdapter extends RecyclerView.Adapter<CampHistoryD
     public void onBindViewHolder(MyViewHolder holder, int position) {
 //        String current = data.get(position).getName();
 //        holder.txt_name.setText("Doctor " + (position + 1));
-        if (position == 4) {
-            holder.card_view.setCardBackgroundColor(context.getResources().getColor(R.color.card_red));
-        } else if (position == 6) {
-            holder.card_view.setCardBackgroundColor(context.getResources().getColor(R.color.card_yellow));
-        } else {
-            holder.card_view.setCardBackgroundColor(context.getResources().getColor(R.color.card_green));
-        }
+
     }
 
     @Override
     public int getItemCount() {
-        return 10;
+        return data.size();
     }
 
     class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {

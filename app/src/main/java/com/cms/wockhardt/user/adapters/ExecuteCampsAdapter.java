@@ -77,6 +77,7 @@ public class ExecuteCampsAdapter extends RecyclerView.Adapter<ExecuteCampsAdapte
 
         @Override
         public void onClick(View v) {
+
             if (data.get(getLayoutPosition()).getStatus() == 2 &&
                     MyApp.getTodayDate(System.currentTimeMillis()).equals(MyApp.parseDateFullMonth(
                             data.get(getLayoutPosition()).getCamp_date().split(" ")[0]))) {

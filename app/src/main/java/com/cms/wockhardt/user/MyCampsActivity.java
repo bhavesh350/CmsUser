@@ -41,7 +41,7 @@ public class MyCampsActivity extends CustomActivity implements CustomActivity.Re
     private RecyclerView rv_list;
     private Toolbar toolbar;
     public boolean amIRm = false;
-    MyCampsAdapter adapter;
+    private MyCampsAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,7 +49,6 @@ public class MyCampsActivity extends CustomActivity implements CustomActivity.Re
         setContentView(R.layout.activity_listing);
         setResponseListener(this);
         amIRm = getIntent().getBooleanExtra(AppConstants.EXTRA, false);
-
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -111,7 +110,7 @@ public class MyCampsActivity extends CustomActivity implements CustomActivity.Re
             @Override
             public void onClick(View v) {
                 dialog.dismiss();
-                MyApp.showMassage(getContext(), "Color will be change based on the real data.");
+//                MyApp.showMassage(getContext(), "Color will be change based on the real data.");
                 RequestParams p = new RequestParams();
                 p.put("camp_id", id);
                 p.put("status", 2);

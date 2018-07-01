@@ -26,11 +26,13 @@ public class CampExecutionClickActivity extends CustomActivity {
         getSupportActionBar().setDisplayShowCustomEnabled(true);
         getSupportActionBar().setTitle(getString(R.string.camp_execution));
         setupUiElements();
+
         if (Build.VERSION.SDK_INT >= 19 && Build.VERSION.SDK_INT < 21) {
             MyApp.setWindowFlag(this, WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS, true);
         }
         if (Build.VERSION.SDK_INT >= 19) {
-            getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
+            getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                    | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
         }
         if (Build.VERSION.SDK_INT >= 21) {
             MyApp.setWindowFlag(this, WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS, false);
@@ -48,7 +50,8 @@ public class CampExecutionClickActivity extends CustomActivity {
     public void onClick(View v) {
         super.onClick(v);
         if (v.getId() == R.id.btn_history) {
-
+            // showing camp history
+            startActivity(new Intent(getContext(), CampHistoryDetailsUsersActivity.class));
         } else if (v.getId() == R.id.btn_new_patient) {
             startActivity(new Intent(getContext(), AddNewPatientActivity.class));
         }

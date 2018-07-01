@@ -125,20 +125,40 @@
     </LinearLayout>
 
 
-    <RelativeLayout
+    <LinearLayout
         android:id="@+id/rl_bottom"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="?actionBarSize"
         android:layout_alignParentBottom="true"
-        android:background="@drawable/gradient_toolbar">
+        android:background="@drawable/gradient_toolbar"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/btn_update"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="?selectableItemBackground"
+            android:text="Update"
+            android:visibility="gone"
+            android:textColor="@color/white"
+            android:textSize="18sp" />
+
+        <View
+            android:id="@+id/view_line"
+            android:layout_width="1dp"
+            android:visibility="gone"
+            android:background="@color/white"
+            android:layout_height="match_parent"></View>
 
         <Button
             android:id="@+id/btn_submit"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
             android:background="?selectableItemBackground"
             android:text="Submit"
             android:textColor="@color/white"
             android:textSize="18sp" />
-    </RelativeLayout>
+    </LinearLayout>
 </RelativeLayout>

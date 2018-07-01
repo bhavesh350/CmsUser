@@ -12,17 +12,16 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.RadioGroup;
-import android.widget.Spinner;
 
 import com.cms.wockhardt.user.application.MyApp;
 import com.cms.wockhardt.user.application.SingleInstance;
+import com.cms.wockhardt.user.models.Patient;
 import com.github.rtoshiro.util.format.SimpleMaskFormatter;
 import com.github.rtoshiro.util.format.text.MaskTextWatcher;
+import com.google.gson.Gson;
 import com.loopj.android.http.RequestParams;
 
 import org.json.JSONArray;
@@ -30,10 +29,8 @@ import org.json.JSONObject;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
 
 import static com.cms.wockhardt.user.application.AppConstants.BASE_URL;
 
@@ -68,7 +65,7 @@ public class AddNewPatientActivity extends CustomActivity implements CustomActiv
         }
     }
 
-    private boolean isMale = false;
+    private boolean isMale = true;
 
     private void setupUiElements() {
         setTouchNClick(R.id.btn_date);
@@ -143,7 +140,7 @@ public class AddNewPatientActivity extends CustomActivity implements CustomActiv
                             p.put("name", edt_patient_name.getText().toString());
                             p.put("sex", isMale ? "m" : "f");
                             p.put("mobile", edt_mobile.getText().toString());
-                            p.put("dob", edt_dob.getText().toString());
+                            p.put("dob", createCampData);
                             p.put("height", edt_height.getText().toString());
                             p.put("weight", edt_weight.getText().toString());
                             p.put("abdominal_circumference", edt_abdo.getText().toString());
@@ -156,7 +153,7 @@ public class AddNewPatientActivity extends CustomActivity implements CustomActiv
                 }
             }).create().show();
 
-
+//            startActivity(new Intent(getContext(), QuestionnaireActivity.class));
         }
     }
 
@@ -186,27 +183,33 @@ public class AddNewPatientActivity extends CustomActivity implements CustomActiv
 
     public String parseDate(String time) {
         Log.e("Date", "parseDateToHHMM: " + time);
-        String inputPattern = "DD-M-yyyy";
-        String outputPattern = "dd/MM/yyyy";
+        String inputPattern = "d-M-yyyy";
+        String outputPattern = "d MMM, yyyy";
+        String outputPatternServer = "yyyy-MM-dd";//2018-06-18
         SimpleDateFormat inputFormat = new SimpleDateFormat(inputPattern);
         SimpleDateFormat outputFormat = new SimpleDateFormat(outputPattern);
+        SimpleDateFormat outputFormatServer = new SimpleDateFormat(outputPatternServer);
 
         Date date;
         String str = null;
         try {
             date = inputFormat.parse(time);
             str = outputFormat.format(date);
+            createCampData = outputFormatServer.format(date);
         } catch (ParseException e) {
             e.printStackTrace();
         }
         return str;
     }
 
+    String createCampData;
 
     @Override
     public void onJsonObjectResponseReceived(JSONObject o, int callNumber) {
         if (callNumber == 1 && o.optBoolean("status")) {
             MyApp.showMassage(getContext(), "Data saved");
+            Patient.Data p = new Gson().fromJson(o.optJSONObject("data").toString(), Patient.Data.class);
+            SingleInstance.getInstance().setPatient(p);
             startActivity(new Intent(getContext(), QuestionnaireActivity.class));
         } else {
             MyApp.popMessage("Error", o.optJSONArray("data").optString(0), getContext());

@@ -41,6 +41,9 @@ public class AddDoctorActivity extends CustomActivity implements CustomActivity.
     private Toolbar toolbar;
     private Doctor.Data selectedDoctor = null;
     private TextView txt_clear_data;
+    private Button btn_submit;
+    private Button btn_update;
+    private View view_line;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,11 +71,14 @@ public class AddDoctorActivity extends CustomActivity implements CustomActivity.
         }
 
         RequestParams p = new RequestParams();
-        p.put("emp_no", MyApp.getSharedPrefString(EMPLOYEE_ID));
+        p.put("user_id", MyApp.getApplication().readUser().getData().getId());
         postCall(getContext(), BASE_URL + "get-all-doctors", p, "", 1);
     }
 
     private void setupUiElements() {
+        btn_submit = findViewById(R.id.btn_submit);
+        view_line = findViewById(R.id.view_line);
+        btn_update = findViewById(R.id.btn_update);
         txt_clear_data = findViewById(R.id.txt_clear_data);
         edt_name = findViewById(R.id.edt_name);
         edt_name.setThreshold(1);
@@ -82,6 +88,7 @@ public class AddDoctorActivity extends CustomActivity implements CustomActivity.
         edt_city = findViewById(R.id.edt_city);
 
         setTouchNClick(R.id.btn_submit);
+        setTouchNClick(R.id.btn_update);
         setTouchNClick(R.id.txt_clear_data);
 
         final List<Doctor.Data> dList = MyApp.getApplication().readDoctors();
@@ -102,6 +109,8 @@ public class AddDoctorActivity extends CustomActivity implements CustomActivity.
                     edt_speciality.setText(dList.get(position).getSpeciality());
                     isFromSaved = true;
                     selectedDoctor = dList.get(position);
+                    btn_update.setVisibility(View.VISIBLE);
+                    view_line.setVisibility(View.VISIBLE);
                 }
             });
 
@@ -153,6 +162,18 @@ public class AddDoctorActivity extends CustomActivity implements CustomActivity.
             edt_msl_code.setText("");
             edt_name.setText("");
             isFromSaved = false;
+            btn_update.setVisibility(View.GONE);
+            view_line.setVisibility(View.GONE);
+        } else if (v == btn_update) {
+            RequestParams p = new RequestParams();
+            p.put("user_id", MyApp.getApplication().readUser().getData().getId());
+            p.put("name", edt_name.getText().toString());
+            p.put("msl_code", edt_msl_code.getText().toString());
+            p.put("mobile", edt_mobile.getText().toString());
+            p.put("speciality", edt_speciality.getText().toString());
+            p.put("city", edt_city.getText().toString());
+
+            postCall(getContext(), AppConstants.BASE_URL + "create-doctor", p, "Creating doctor...", 2);
         }
     }
 
@@ -184,6 +205,8 @@ public class AddDoctorActivity extends CustomActivity implements CustomActivity.
                         edt_speciality.setText(dList.get(position).getSpeciality());
                         isFromSaved = true;
                         selectedDoctor = dList.get(position);
+                        btn_update.setVisibility(View.VISIBLE);
+                        view.setVisibility(View.VISIBLE);
                     }
                 });
 

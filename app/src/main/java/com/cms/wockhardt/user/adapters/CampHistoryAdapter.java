@@ -70,7 +70,6 @@ public class CampHistoryAdapter extends RecyclerView.Adapter<CampHistoryAdapter.
         @Override
         public void onClick(View v) {
             context.startActivity(new Intent(context, CampHistoryDetailsActivity.class));
-
         }
     }
 }

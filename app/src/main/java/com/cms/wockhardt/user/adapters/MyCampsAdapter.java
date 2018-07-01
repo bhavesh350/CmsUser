@@ -81,6 +81,7 @@ public class MyCampsAdapter extends RecyclerView.Adapter<MyCampsAdapter.MyViewHo
 
         @Override
         public void onClick(View v) {
+
             if (data.get(getLayoutPosition()).getStatus() == 1) {
                 ((MyCampsActivity) context).openApprovalCampDialog(data.get(getLayoutPosition()).getId(), getLayoutPosition());
             }

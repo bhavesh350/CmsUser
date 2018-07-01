@@ -40,7 +40,7 @@ public class MainActivity extends CustomActivity implements CustomActivity.Respo
         if (userType == 1) {
             startActivity(new Intent(getContext(), RmMainActivity.class));
             finish();
-        } else if (userType == 2 || userType == 3) {
+        } else if (userType == 2 || userType == 3 || userType == 4) {
             startActivity(new Intent(getContext(), ZsmSmMainActivity.class));
             finish();
         }
@@ -76,7 +76,7 @@ public class MainActivity extends CustomActivity implements CustomActivity.Respo
         } else if (v.getId() == R.id.btn_camp_execution) {
             startActivity(new Intent(getContext(), CampExecutionActivity.class));
         } else if (v.getId() == R.id.btn_notification) {
-            startActivity(new Intent(getContext(),NotificationsActivity.class));
+            startActivity(new Intent(getContext(), NotificationsActivity.class));
         } else if (v.getId() == R.id.btn_leaderboard) {
 
         } else if (v.getId() == R.id.txt_logout) {

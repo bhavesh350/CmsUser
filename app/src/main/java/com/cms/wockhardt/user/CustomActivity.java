@@ -134,7 +134,7 @@ public class CustomActivity extends AppCompatActivity implements OnClickListener
     }
 
     public void postCall(Context c, String url, RequestParams p, String loadingMsg, final int callNumber) {
-        if (!MyApp.isConnectingToInternet(this)){
+        if (!MyApp.isConnectingToInternet(this)) {
             dismissDialog();
             return;
         }
@@ -159,7 +159,10 @@ public class CustomActivity extends AppCompatActivity implements OnClickListener
                 super.onFailure(statusCode, headers, throwable, errorResponse);
                 MyApp.spinnerStop();
                 Log.d("error message:", throwable.getMessage());
-                responseCallback.onErrorReceived(getString(R.string.something_wrong));
+                if (statusCode == 0)
+                    responseCallback.onErrorReceived(getString(R.string.check_internet_connection));
+                else
+                    responseCallback.onErrorReceived(getString(R.string.something_wrong));
             }
 
             @Override
@@ -172,7 +175,7 @@ public class CustomActivity extends AppCompatActivity implements OnClickListener
     }
 
     public void postCall(Context c, String url, JSONObject object, String loadingMsg, final int callNumber) {
-        if (!MyApp.isConnectingToInternet(this)){
+        if (!MyApp.isConnectingToInternet(this)) {
             dismissDialog();
             return;
         }
@@ -227,7 +230,7 @@ public class CustomActivity extends AppCompatActivity implements OnClickListener
 
 
     public void postCall10Sec(Context c, String url, RequestParams p, String loadingMsg, final int callNumber) {
-        if (!MyApp.isConnectingToInternet(this)){
+        if (!MyApp.isConnectingToInternet(this)) {
             dismissDialog();
             return;
         }
@@ -309,7 +312,7 @@ public class CustomActivity extends AppCompatActivity implements OnClickListener
     }
 
     public void getCallWithHeader(String url, final int callNumber) {
-        if (!MyApp.isConnectingToInternet(this)){
+        if (!MyApp.isConnectingToInternet(this)) {
             dismissDialog();
             return;
         }
@@ -359,7 +362,7 @@ public class CustomActivity extends AppCompatActivity implements OnClickListener
 
 
     public void getCall(String url, String loadingMsg, final int callNumber) {
-        if (!MyApp.isConnectingToInternet(this)){
+        if (!MyApp.isConnectingToInternet(this)) {
             dismissDialog();
             return;
         }
