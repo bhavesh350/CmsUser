@@ -1,7 +1,5 @@
 package com.cms.wockhardt.user.models;
 
-import android.app.admin.DeviceAdminInfo;
-
 import java.util.List;
 
 public class MyTeam {
@@ -47,6 +45,42 @@ public class MyTeam {
         private String device_token;
         private List<Data> child;
         private Data parent;
+        private List<Camp.Data> camps;
+        private int rm_patient_count;
+        private int rm_camp_count;
+        private int rm_patient_count_orignal;
+
+        public int getRm_patient_count_orignal() {
+            return rm_patient_count_orignal;
+        }
+
+        public void setRm_patient_count_orignal(int rm_patient_count_orignal) {
+            this.rm_patient_count_orignal = rm_patient_count_orignal;
+        }
+
+        public List<Camp.Data> getCamps() {
+            return camps;
+        }
+
+        public void setCamps(List<Camp.Data> camps) {
+            this.camps = camps;
+        }
+
+        public int getRm_patient_count() {
+            return rm_patient_count;
+        }
+
+        public void setRm_patient_count(int rm_patient_count) {
+            this.rm_patient_count = rm_patient_count;
+        }
+
+        public int getRm_camp_count() {
+            return rm_camp_count;
+        }
+
+        public void setRm_camp_count(int rm_camp_count) {
+            this.rm_camp_count = rm_camp_count;
+        }
 
         public int getId() {
             return id;

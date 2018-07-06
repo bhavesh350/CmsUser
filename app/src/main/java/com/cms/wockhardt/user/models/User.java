@@ -1,6 +1,7 @@
 package com.cms.wockhardt.user.models;
 
 import java.io.Serializable;
+import java.util.List;
 
 public class User implements Serializable {
     private static final long serialVersionUID = 7524558747L;
@@ -57,6 +58,33 @@ public class User implements Serializable {
         private String parent_id;
         private String created_at;
         private Profile profile;
+        private List<Camp.Data> camp;
+        private int campCount;
+        private int campExeCount;
+
+        public int getCampCount() {
+            return campCount;
+        }
+
+        public void setCampCount(int campCount) {
+            this.campCount = campCount;
+        }
+
+        public int getCampExeCount() {
+            return campExeCount;
+        }
+
+        public void setCampExeCount(int campExeCount) {
+            this.campExeCount = campExeCount;
+        }
+
+        public List<Camp.Data> getCamp() {
+            return camp;
+        }
+
+        public void setCamp(List<Camp.Data> camp) {
+            this.camp = camp;
+        }
 
         public Profile getProfile() {
             return profile;

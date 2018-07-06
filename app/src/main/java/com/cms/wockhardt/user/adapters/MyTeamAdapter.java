@@ -9,10 +9,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.cms.wockhardt.user.CampHistoryActivity;
 import com.cms.wockhardt.user.MyCampsActivity;
 import com.cms.wockhardt.user.MyTeamActivity;
 import com.cms.wockhardt.user.R;
 import com.cms.wockhardt.user.application.AppConstants;
+import com.cms.wockhardt.user.application.MyApp;
 import com.cms.wockhardt.user.application.SingleInstance;
 import com.cms.wockhardt.user.models.Doctor;
 import com.cms.wockhardt.user.models.MyTeam;
@@ -74,6 +76,11 @@ public class MyTeamAdapter extends RecyclerView.Adapter<MyTeamAdapter.MyViewHold
         public void onClick(View v) {
             try {
                 if (data.get(getLayoutPosition()).getDesignation().equals("TM")) {
+                    if (MyApp.getApplication().readUser().getData().getDesignation().equals("RM")) {
+                        if (!((MyTeamActivity) context).isGoNext) {
+                            return;
+                        }
+                    }
                     context.startActivity(new Intent(context, MyCampsActivity.class).putExtra(AppConstants.EXTRA, true)
                             .putExtra("myId", data.get(getLayoutPosition()).getId()));
                 } else {
@@ -83,6 +90,7 @@ public class MyTeamAdapter extends RecyclerView.Adapter<MyTeamAdapter.MyViewHold
                     }
                 }
             } catch (Exception e) {
+                ((CampHistoryActivity)context).callHistoryApi(data.get(getLayoutPosition()));
             }
 
         }

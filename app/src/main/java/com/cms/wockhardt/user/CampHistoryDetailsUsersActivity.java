@@ -15,6 +15,7 @@ import com.cms.wockhardt.user.adapters.CampHistoryDetailsAdapter;
 import com.cms.wockhardt.user.adapters.CampHistoryDetailsUsersAdapter;
 import com.cms.wockhardt.user.application.MyApp;
 import com.cms.wockhardt.user.application.SingleInstance;
+import com.cms.wockhardt.user.models.Camp;
 import com.cms.wockhardt.user.models.Doctor;
 
 import java.util.ArrayList;
@@ -24,11 +25,13 @@ public class CampHistoryDetailsUsersActivity extends CustomActivity {
     private Toolbar toolbar;
     private RecyclerView rv_list;
     private TextView txt_doctor;
+    private Camp.Data campData;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_camp_history_details_users);
+        campData = SingleInstance.getInstance().getSelectedCamp();
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -53,12 +56,22 @@ public class CampHistoryDetailsUsersActivity extends CustomActivity {
         rv_list.setLayoutManager(new LinearLayoutManager(getContext()));
 //        rv_list.setNestedScrollingEnabled(false);
 
-        txt_doctor.setText("");
+        txt_doctor.setText("Dr. "+campData.getDoctor().getName() + " (" + campData.getDoctor().getMsl_code() + ")"
+                + ((campData.getPatients().size() > 0) ? "" : "\n\n\n No patient created yet"));
 
         CampHistoryDetailsUsersAdapter adapter = new CampHistoryDetailsUsersAdapter(getContext(),
                 SingleInstance.getInstance().getSelectedCamp().getPatients());
         rv_list.setAdapter(adapter);
 //        setTouchNClick(R.id.btn_share);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        CampHistoryDetailsUsersAdapter adapter = new CampHistoryDetailsUsersAdapter(getContext(),
+                SingleInstance.getInstance().getSelectedCamp().getPatients());
+        rv_list.setAdapter(adapter);
     }
 
     @Override

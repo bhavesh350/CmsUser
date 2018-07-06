@@ -177,7 +177,7 @@ public class AddNewPatientActivity extends CustomActivity implements CustomActiv
                         edt_dob.setText(parseDate(dayOfMonth + "-" + (monthOfYear + 1) + "-" + year));
                     }
                 }, mYear, mMonth, mDay);
-        datePickerDialog.getDatePicker().setMinDate(System.currentTimeMillis() - 1000);
+//        datePickerDialog.getDatePicker().setMinDate(System.currentTimeMillis() - 1000);
         datePickerDialog.show();
     }
 

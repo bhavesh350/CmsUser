@@ -1,7 +1,7 @@
 package com.cms.wockhardt.user.adapters;
 
 import android.content.Context;
-import android.icu.util.CurrencyAmount;
+import android.content.Intent;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -9,12 +9,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.cms.wockhardt.user.CampHistoryDetailsActivity;
+import com.cms.wockhardt.user.CampHistoryZSMActivity;
 import com.cms.wockhardt.user.R;
 import com.cms.wockhardt.user.application.MyApp;
-import com.cms.wockhardt.user.models.Camp;
+import com.cms.wockhardt.user.application.SingleInstance;
 import com.cms.wockhardt.user.models.Doctor;
 import com.cms.wockhardt.user.models.MyTeam;
-import com.cms.wockhardt.user.models.Patient;
 
 import java.util.List;
 
@@ -22,13 +23,13 @@ import java.util.List;
  * Created by Abhishek on 22-04-2017.
  */
 
-public class CampHistoryDetailsAdapter extends RecyclerView.Adapter<CampHistoryDetailsAdapter.MyViewHolder> {
+public class CampHistoryZSMAdapter extends RecyclerView.Adapter<CampHistoryZSMAdapter.MyViewHolder> {
 
-    List<Camp.Data> data;
+    List<MyTeam.Data> data;
     private LayoutInflater inflater;
     private Context context;
 
-    public CampHistoryDetailsAdapter(Context context, List<Camp.Data> data) {
+    public CampHistoryZSMAdapter(Context context, List<MyTeam.Data> data) {
         this.context = context;
         inflater = LayoutInflater.from(context);
         this.data = data;
@@ -37,30 +38,26 @@ public class CampHistoryDetailsAdapter extends RecyclerView.Adapter<CampHistoryD
 
     @Override
     public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = inflater.inflate(R.layout.item_camp_history_details, parent, false);
+        View view = inflater.inflate(R.layout.item_camp_history_manager, parent, false);
         MyViewHolder holder = new MyViewHolder(view);
         return holder;
     }
 
     @Override
     public void onBindViewHolder(MyViewHolder holder, int position) {
+        MyTeam.Data d = data.get(position);
+        holder.txt_name.setText(d.getName());
 
-        Camp.Data d = data.get(position);
+        holder.txt_patients.setText("Total Patients\n" + d.getRm_patient_count_orignal());
+        holder.txt_camps.setText("Total Camps\n" + d.getRm_camp_count());
+        holder.txt_designation.setText("" + d.getDesignation());
+        holder.txt_emp_id.setText("" + d.getEmp_no());
 
-        holder.txt_name.setText(d.getDoctor().getName() + " ( MSL code - " + d.getDoctor().getMsl_code() + ")");
-        if (d.getStatus() == 0) {
-            holder.txt_approval.setText("Not approved");
+        if (d.getRm_camp_count() == 0) {
             holder.card_view.setCardBackgroundColor(context.getResources().getColor(R.color.card_red));
-        } else if (d.getStatus() == 1) {
-            holder.txt_approval.setText("Approval pending");
-            holder.card_view.setCardBackgroundColor(context.getResources().getColor(R.color.card_yellow));
         } else {
             holder.card_view.setCardBackgroundColor(context.getResources().getColor(R.color.card_green));
-            holder.txt_approval.setText("Approved");
         }
-        holder.txt_patient_screened.setText("Patients screened : " + d.getPatients().size());
-        holder.txt_date.setText(MyApp.parseDateSortDate(d.getCamp_date()));
-
     }
 
     @Override
@@ -69,22 +66,28 @@ public class CampHistoryDetailsAdapter extends RecyclerView.Adapter<CampHistoryD
     }
 
     class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        TextView txt_name, txt_patient_screened, txt_date, txt_approval;
+        TextView txt_name, txt_patients, txt_camps, txt_designation, txt_emp_id;
         CardView card_view;
 
         public MyViewHolder(View itemView) {
             super(itemView);
-            txt_date = itemView.findViewById(R.id.txt_date);
-            txt_patient_screened = itemView.findViewById(R.id.txt_patient_screened);
-            txt_approval = itemView.findViewById(R.id.txt_approval);
             txt_name = itemView.findViewById(R.id.txt_name);
             card_view = itemView.findViewById(R.id.card_view);
+            txt_patients = itemView.findViewById(R.id.txt_patients);
+            txt_designation = itemView.findViewById(R.id.txt_designation);
+            txt_camps = itemView.findViewById(R.id.txt_camps);
+            txt_emp_id = itemView.findViewById(R.id.txt_emp_id);
             itemView.setOnClickListener(this);
         }
 
         @Override
         public void onClick(View v) {
-
+            if (data.get(getLayoutPosition()).getRm_camp_count() == 0) {
+                return;
+            }
+            SingleInstance.getInstance().setZsmHistoryData(data.get(getLayoutPosition()));
+            context.startActivity(new Intent(context, CampHistoryDetailsActivity.class).putExtra("month",
+                    ((CampHistoryZSMActivity) context).select_month.getText().toString()));
         }
     }
 }

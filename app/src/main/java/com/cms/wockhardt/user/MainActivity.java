@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.TextView;
 
 import com.cms.wockhardt.user.application.AppConstants;
 import com.cms.wockhardt.user.application.MyApp;
@@ -25,6 +26,7 @@ public class MainActivity extends CustomActivity implements CustomActivity.Respo
 
     private Toolbar toolbar;
     private int userType;
+    private TextView txt_name;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,6 +60,8 @@ public class MainActivity extends CustomActivity implements CustomActivity.Respo
     }
 
     private void setupUiElements() {
+        txt_name = findViewById(R.id.txt_name);
+        txt_name.setText("Logged in as : " + MyApp.getApplication().readUser().getData().getName());
         setClick(R.id.btn_my_doctors);
         setClick(R.id.btn_camp_plan);
         setClick(R.id.btn_camp_execution);
@@ -78,7 +82,7 @@ public class MainActivity extends CustomActivity implements CustomActivity.Respo
         } else if (v.getId() == R.id.btn_notification) {
             startActivity(new Intent(getContext(), NotificationsActivity.class));
         } else if (v.getId() == R.id.btn_leaderboard) {
-
+            startActivity(new Intent(getContext(), LeaderboardActivity.class));
         } else if (v.getId() == R.id.txt_logout) {
             MyApp.setStatus(AppConstants.IS_LOGIN, false);
             startActivity(new Intent(getContext(), LoginActivity.class));

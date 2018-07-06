@@ -42,6 +42,15 @@ public class Camp {
         private int status;
         private Doctor.Data doctor;
         private List<Patient.Data> patients;
+        private User.Data employee;
+
+        public User.Data getEmployee() {
+            return employee;
+        }
+
+        public void setEmployee(User.Data employee) {
+            this.employee = employee;
+        }
 
         public List<Patient.Data> getPatients() {
             return patients;

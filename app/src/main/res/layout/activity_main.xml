@@ -24,19 +24,31 @@
 
         <TextView
             android:id="@+id/txt_logout"
-            android:background="?selectableItemBackground"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:padding="10dp"
+            android:background="?selectableItemBackground"
+            android:drawablePadding="10dp"
             android:drawableRight="@drawable/ic_logout"
             android:gravity="center"
-            android:drawablePadding="10dp"
+            android:padding="10dp"
             android:text="Logout"
             android:textColor="@color/white"
             android:textSize="16sp" />
     </RelativeLayout>
+
+    <TextView
+        android:id="@+id/txt_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right"
+        android:layout_marginBottom="-10dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="10dp"
+        android:text="Name"
+        android:textColor="@color/white"
+        android:textSize="16sp" />
 
     <ScrollView
         android:layout_width="match_parent"
@@ -48,6 +60,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="30dp"
             android:orientation="vertical">
+
 
             <RelativeLayout
                 android:layout_width="match_parent"

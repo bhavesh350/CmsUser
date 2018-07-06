@@ -14,6 +14,24 @@ public class SingleInstance {
     private Doctor.Data selectedDoctor = null;
     private Patient.Data patient;
     private Patient.Question currentQuestionReport;
+    private MyTeam.Data zsmHistoryData;
+    private Camp historyCamp ;
+
+    public Camp getHistoryCamp() {
+        return historyCamp;
+    }
+
+    public void setHistoryCamp(Camp historyCamp) {
+        this.historyCamp = historyCamp;
+    }
+
+    public MyTeam.Data getZsmHistoryData() {
+        return zsmHistoryData;
+    }
+
+    public void setZsmHistoryData(MyTeam.Data zsmHistoryData) {
+        this.zsmHistoryData = zsmHistoryData;
+    }
 
     public Patient.Question getCurrentQuestionReport() {
         return currentQuestionReport;

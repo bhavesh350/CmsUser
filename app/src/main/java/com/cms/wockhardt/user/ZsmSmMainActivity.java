@@ -15,7 +15,7 @@ import com.cms.wockhardt.user.application.MyApp;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-public class ZsmSmMainActivity extends CustomActivity implements CustomActivity.ResponseCallback{
+public class ZsmSmMainActivity extends CustomActivity implements CustomActivity.ResponseCallback {
 
     //    private Toolbar toolbar;
     private RelativeLayout rl_camp_approval;
@@ -55,12 +55,16 @@ public class ZsmSmMainActivity extends CustomActivity implements CustomActivity.
         if (v.getId() == R.id.btn_my_team) {
             startActivity(new Intent(getContext(), MyTeamActivity.class).putExtra(AppConstants.EXTRA, false));
         } else if (v.getId() == R.id.btn_camp_history) {
+            if (MyApp.getApplication().readUser().getData().getDesignation().equals("NSM")) {
+                startActivity(new Intent(getContext(), MyTeamActivity.class).putExtra(AppConstants.EXTRA, true));
+                return;
+            }
             startActivity(new Intent(getContext(), CampHistoryZSMActivity
                     .class).putExtra(AppConstants.EXTRA, true));
         } else if (v.getId() == R.id.btn_notification) {
-            startActivity(new Intent(getContext(),NotificationsActivity.class));
+            startActivity(new Intent(getContext(), NotificationsActivity.class));
         } else if (v.getId() == R.id.btn_leaderboard) {
-
+            startActivity(new Intent(getContext(), LeaderboardActivity.class));
         } else if (v.getId() == R.id.txt_logout) {
             startActivity(new Intent(getContext(), LoginActivity.class));
             finishAffinity();

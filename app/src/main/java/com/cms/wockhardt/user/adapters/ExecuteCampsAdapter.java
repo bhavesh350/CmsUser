@@ -84,8 +84,12 @@ public class ExecuteCampsAdapter extends RecyclerView.Adapter<ExecuteCampsAdapte
                 SingleInstance.getInstance().setSelectedCamp(data.get(getLayoutPosition()));
                 context.startActivity(new Intent(context, CampExecutionClickActivity.class));
             } else {
-                if (data.get(getLayoutPosition()).getStatus() == 2) {
+                if (data.get(getLayoutPosition()).getStatus() == 1) {
                     MyApp.popMessage("Alert", "Your camp is not approved yet.", context);
+                } else if (data.get(getLayoutPosition()).getStatus() == 0) {
+                    MyApp.popMessage("Alert", "Your camp has been rejected by your RM.", context);
+                } else {
+                    MyApp.showMassage(context, "It's a past camp");
                 }
             }
 

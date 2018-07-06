@@ -162,7 +162,7 @@ public class MyTeamActivity extends CustomActivity implements CustomActivity.Res
     }
 
     public void goNextLevel(MyTeam.Data team, boolean isNextLevel) {
-        if (isNextLevel) {
+        if (isNextLevel && (!team.getDesignation().equals("TM") || isGoNext)) {
             startActivity(new Intent(getContext(), MyTeamActivity.class).putExtra("myId", team.getId())
                     .putExtra("isNext", true));
         }

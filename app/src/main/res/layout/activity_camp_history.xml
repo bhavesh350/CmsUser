@@ -11,29 +11,21 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_margin="10dp"
+        android:layout_margin="5dp"
         android:orientation="vertical">
 
         <TextView
-            android:layout_width="match_parent"
+            android:id="@+id/select_month"
+            android:layout_width="150dp"
             android:layout_height="wrap_content"
-            android:text="Select Month"
-            android:gravity="center"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="-18dp"
-            android:textColor="@color/white"
-            android:textStyle="bold"
-            android:textSize="16sp" />
-
-        <Spinner
-            android:id="@+id/spinner_months"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="20dp"
+            android:layout_gravity="center_horizontal"
             android:background="@drawable/edit_bg_rounded"
             android:gravity="center"
-            android:padding="10dp"
-            android:textAlignment="center"></Spinner>
+            android:padding="8dp"
+            android:text="Select Month"
+            android:textColor="@color/black"
+            android:textSize="18sp" />
+
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/rv_list"

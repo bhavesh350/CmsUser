@@ -271,7 +271,9 @@ public class QuestionnaireActivity extends CustomActivity implements CustomActiv
                 Camp.Data data = SingleInstance.getInstance().getSelectedCamp();
                 data.getPatients().get(patientPosition).setQuestion(q);
                 SingleInstance.getInstance().setSelectedCamp(data);
-
+                SingleInstance.getInstance().setCurrentQuestionReport(q);
+                startActivity(new Intent(getContext(), SubmitQuestionnaireActivity.class));
+                finish();
             } else {
                 SingleInstance.getInstance().setCurrentQuestionReport(q);
                 startActivity(new Intent(getContext(), SubmitQuestionnaireActivity.class));
