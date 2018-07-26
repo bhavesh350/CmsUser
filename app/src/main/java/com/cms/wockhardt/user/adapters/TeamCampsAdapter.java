@@ -49,13 +49,7 @@ public class TeamCampsAdapter extends RecyclerView.Adapter<TeamCampsAdapter.MyVi
         holder.txt_name.setText(d.getDoctor().getName() + " " + "(" + d.getDoctor().getMsl_code() + ")");
         holder.txt_count.setText(d.getPatients().size() + " Patients");
         holder.txt_date.setText(MyApp.parseDateFullMonth(d.getCamp_date().split(" ")[0]));
-//        if (d.getStatus() == 0) {
-//            holder.card_view.setCardBackgroundColor(context.getResources().getColor(R.color.card_red));
-//        } else if (d.getStatus() == 2) {
-//            holder.card_view.setCardBackgroundColor(context.getResources().getColor(R.color.card_green));
-//        } else {
-//            holder.card_view.setCardBackgroundColor(context.getResources().getColor(R.color.card_yellow));
-//        }
+
     }
 
     @Override

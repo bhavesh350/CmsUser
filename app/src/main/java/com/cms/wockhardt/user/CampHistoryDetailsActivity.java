@@ -57,16 +57,12 @@ public class CampHistoryDetailsActivity extends CustomActivity {
         txt_emp_details = findViewById(R.id.txt_emp_details);
         rv_list.setLayoutManager(new LinearLayoutManager(getContext()));
         rv_list.setNestedScrollingEnabled(false);
-//        CampHistoryDetailsAdapter adapter = new CampHistoryDetailsAdapter(getContext(),
-//                SingleInstance.getInstance().getSelectedCamp());
-//        rv_list.setAdapter(adapter);
         setTouchNClick(R.id.btn_share);
         txt_emp_details.setText(currentData.getHq() + ", " + getIntent().getStringExtra("month"));
 
 
-
         if (currentData.getDesignation().equals("ZSM"))
-            rv_list.setAdapter(new CampHistoryZSMAdapter(getContext(), currentData.getChild()));
+            rv_list.setAdapter(new CampHistoryZSMAdapter(getContext(), currentData.getChild(), getIntent().getStringExtra("month")));
         else
             rv_list.setAdapter(new CampHistoryRMAdapter(getContext(), currentData.getChild()));
 

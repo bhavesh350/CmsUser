@@ -1,7 +1,6 @@
 package com.cms.wockhardt.user;
 
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
@@ -13,11 +12,11 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.TextView;
 
-import com.cms.wockhardt.user.adapters.MyTeamAdapter;
+import com.cms.wockhardt.user.adapters.CampHistoryTMAdapter;
+import com.cms.wockhardt.user.adapters.CampHistoryZSMAdapter;
 import com.cms.wockhardt.user.application.MyApp;
-import com.cms.wockhardt.user.application.SingleInstance;
 import com.cms.wockhardt.user.models.Camp;
-import com.cms.wockhardt.user.models.MyTeam;
+import com.cms.wockhardt.user.models.CampHistoryZsm;
 import com.google.gson.Gson;
 import com.loopj.android.http.RequestParams;
 import com.whiteelephant.monthpicker.MonthPickerDialog;
@@ -25,26 +24,30 @@ import com.whiteelephant.monthpicker.MonthPickerDialog;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 
 import static com.cms.wockhardt.user.application.AppConstants.BASE_URL;
 
-public class CampHistoryActivity extends CustomActivity implements CustomActivity.ResponseCallback {
+public class CampHistoryTMActivity extends CustomActivity implements CustomActivity.ResponseCallback {
 
     private Toolbar toolbar;
-    private TextView select_month;
-    private RecyclerView rv_list;
+    public TextView select_month;
+    private RecyclerView rl_list;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setResponseListener(this);
-        setContentView(R.layout.activity_camp_history);
+
+        setContentView(R.layout.activity_camp_hostory_zsm);
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowCustomEnabled(true);
         getSupportActionBar().setTitle(getString(R.string.camp_history));
+        setupUiElements();
         if (Build.VERSION.SDK_INT >= 19 && Build.VERSION.SDK_INT < 21) {
             MyApp.setWindowFlag(this, WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS, true);
         }
@@ -55,41 +58,42 @@ public class CampHistoryActivity extends CustomActivity implements CustomActivit
             MyApp.setWindowFlag(this, WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS, false);
             getWindow().setStatusBarColor(Color.TRANSPARENT);
         }
-        setupUiElements();
-
-        RequestParams pp = new RequestParams();
-        pp.put("user_id", MyApp.getApplication().readUser().getData().getId());
-        postCall(getContext(), BASE_URL + "my-team", pp, "Please wait...", 1);
 
     }
 
     private void setupUiElements() {
-        rv_list = findViewById(R.id.rv_list);
-        rv_list.setLayoutManager(new LinearLayoutManager(getContext()));
+        rl_list = findViewById(R.id.rl_list);
+        rl_list.setLayoutManager(new LinearLayoutManager(getContext()));
 
         select_month = findViewById(R.id.select_month);
-        select_month.setText("June, 2018");
+        select_month.setText("JUNE, 2018");
         setTouchNClick(R.id.select_month);
 
+        RequestParams p = new RequestParams();
+
+        p.put("month", 6);
+        p.put("year", 2018);
+
+        p.put("user_id", MyApp.getApplication().readUser().getData().getId());
+        postCall(getContext(), BASE_URL + "camp-history-for-tm", p, "Loading...", 1);
+
     }
-
-    public int month = 6;
-    public int year = 2018;
-
-    private RequestParams p = new RequestParams();
 
     @Override
     public void onClick(View v) {
         super.onClick(v);
         if (v == select_month) {
-
             Calendar c = Calendar.getInstance();
             MonthPickerDialog.Builder builder = new MonthPickerDialog.Builder(getContext(), new MonthPickerDialog.OnDateSetListener() {
                 @Override
                 public void onDateSet(int selectedMonth, int selectedYear) {
                     Log.d("Selected", "selectedMonth : " + selectedMonth + " selectedYear : " + selectedYear);
-                    month = selectedMonth + 1;
-                    year = selectedYear;
+
+                    RequestParams p = new RequestParams();
+                    p.put("month", (selectedMonth + 1));
+                    p.put("year", selectedYear);
+                    p.put("user_id", MyApp.getApplication().readUser().getData().getId());
+                    postCall(getContext(), BASE_URL + "camp-history-for-tm", p, "Loading...", 1);
                     select_month.setText(getMonth(selectedMonth) + ", " + selectedYear);
                 }
             }, c.get(Calendar.YEAR), c.get(Calendar.MONTH));
@@ -150,26 +154,21 @@ public class CampHistoryActivity extends CustomActivity implements CustomActivit
     }
 
     private Context getContext() {
-        return CampHistoryActivity.this;
+        return CampHistoryTMActivity.this;
     }
+
 
     @Override
     public void onJsonObjectResponseReceived(JSONObject o, int callNumber) {
-        if (callNumber == 1 && o.optBoolean("status")) {
-            MyTeam team = new Gson().fromJson(o.toString(), MyTeam.class);
-            MyTeamAdapter adapter = new MyTeamAdapter(getContext(), team.getData().get(0).getChild());
-            rv_list.setAdapter(adapter);
-        } else if (callNumber == 2 && o.optBoolean("status")) {
-            Camp c = new Gson().fromJson(o.toString(), Camp.class);
-            SingleInstance.getInstance().setHistoryCamp(c);
-            if (c.getData().size() == 0) {
-                MyApp.popMessage("Message", "No camp created yet for the selected employee and month.", getContext());
-                return;
-            }
-            startActivity(new Intent(getContext(), CampHistoryRMDetailsActivity.class).putExtra("month",
-                    select_month.getText().toString()).putExtra("name", empName));
+        if (o.optBoolean("status")) {
+            Camp h = new Gson().fromJson(o.toString(), Camp.class);
+            CampHistoryTMAdapter adapter = new CampHistoryTMAdapter(getContext(), h.getData(), select_month.getText().toString());
+            rl_list.setAdapter(adapter);
         } else {
-            MyApp.popMessage("Error", o.optJSONArray("data").optString(0), getContext());
+            MyApp.popMessage("Message", "No camp history found for the selected month.", getContext());
+            List<Camp.Data> list = new ArrayList<>();
+            CampHistoryTMAdapter adapter = new CampHistoryTMAdapter(getContext(), list, select_month.getText().toString());
+            rl_list.setAdapter(adapter);
         }
     }
 
@@ -186,16 +185,5 @@ public class CampHistoryActivity extends CustomActivity implements CustomActivit
     @Override
     public void onErrorReceived(String error) {
         MyApp.popMessage("Error", error, getContext());
-    }
-
-    private String empName;
-
-    public void callHistoryApi(MyTeam.Data data) {
-        empName = data.getName();
-        RequestParams p = new RequestParams();
-        p.put("emp_id", data.getId());
-        p.put("month", month);
-        p.put("year", year);
-        postCall(getContext(), BASE_URL + "camp-history-rm", p, "Loading...", 2);
     }
 }

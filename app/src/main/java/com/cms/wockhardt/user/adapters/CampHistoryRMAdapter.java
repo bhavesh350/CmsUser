@@ -103,8 +103,11 @@ public class CampHistoryRMAdapter extends RecyclerView.Adapter<CampHistoryRMAdap
         @Override
         public void onClick(View v) {
             SingleInstance.getInstance().setZsmHistoryData(data.get(getLayoutPosition()));
-            context.startActivity(new Intent(context, CampHistoryDetailsActivity.class).putExtra("month",
-                    ((CampHistoryZSMActivity) context).select_month.getText().toString()));
+            try {
+                context.startActivity(new Intent(context, CampHistoryDetailsActivity.class).putExtra("month",
+                        ((CampHistoryZSMActivity) context).select_month.getText().toString()));
+            } catch (Exception e) {
+            }
         }
     }
 }

@@ -28,11 +28,13 @@ public class CampHistoryZSMAdapter extends RecyclerView.Adapter<CampHistoryZSMAd
     List<MyTeam.Data> data;
     private LayoutInflater inflater;
     private Context context;
+    private String month;
 
-    public CampHistoryZSMAdapter(Context context, List<MyTeam.Data> data) {
+    public CampHistoryZSMAdapter(Context context, List<MyTeam.Data> data, String date) {
         this.context = context;
         inflater = LayoutInflater.from(context);
         this.data = data;
+        month = date;
     }
 
 
@@ -48,16 +50,29 @@ public class CampHistoryZSMAdapter extends RecyclerView.Adapter<CampHistoryZSMAd
         MyTeam.Data d = data.get(position);
         holder.txt_name.setText(d.getName());
 
-        holder.txt_patients.setText("Total Patients\n" + d.getRm_patient_count_orignal());
-        holder.txt_camps.setText("Total Camps\n" + d.getRm_camp_count());
+        if (d.getDesignation().equals("ZSM")) {
+            holder.txt_patients.setText("Total Patients\n" + d.getZsm_patient_count_orignal());
+            holder.txt_camps.setText("Total Camps\n" + d.getZsm_camp_count());
+            if (d.getZsm_camp_count() == 0) {
+                holder.card_view.setCardBackgroundColor(context.getResources().getColor(R.color.card_red));
+            } else {
+                holder.card_view.setCardBackgroundColor(context.getResources().getColor(R.color.card_green));
+            }
+        } else {
+            holder.txt_patients.setText("Total Patients\n" + d.getRm_patient_count_orignal());
+            holder.txt_camps.setText("Total Camps\n" + d.getRm_camp_count());
+            if (d.getRm_camp_count() == 0) {
+                holder.card_view.setCardBackgroundColor(context.getResources().getColor(R.color.card_red));
+            } else {
+                holder.card_view.setCardBackgroundColor(context.getResources().getColor(R.color.card_green));
+            }
+        }
+
+
         holder.txt_designation.setText("" + d.getDesignation());
         holder.txt_emp_id.setText("" + d.getEmp_no());
 
-        if (d.getRm_camp_count() == 0) {
-            holder.card_view.setCardBackgroundColor(context.getResources().getColor(R.color.card_red));
-        } else {
-            holder.card_view.setCardBackgroundColor(context.getResources().getColor(R.color.card_green));
-        }
+
     }
 
     @Override
@@ -82,12 +97,19 @@ public class CampHistoryZSMAdapter extends RecyclerView.Adapter<CampHistoryZSMAd
 
         @Override
         public void onClick(View v) {
-            if (data.get(getLayoutPosition()).getRm_camp_count() == 0) {
+
+            if (data.get(getLayoutPosition()).getRm_camp_count() == 0 && data.get(getLayoutPosition()).getDesignation().equals("RM")) {
+                return;
+            }
+
+            if (data.get(getLayoutPosition()).getZsm_camp_count() == 0 && data.get(getLayoutPosition()).getDesignation().equals("ZSM")) {
                 return;
             }
             SingleInstance.getInstance().setZsmHistoryData(data.get(getLayoutPosition()));
+
             context.startActivity(new Intent(context, CampHistoryDetailsActivity.class).putExtra("month",
-                    ((CampHistoryZSMActivity) context).select_month.getText().toString()));
+                    month));
+
         }
     }
 }

@@ -46,9 +46,36 @@ public class MyTeam {
         private List<Data> child;
         private Data parent;
         private List<Camp.Data> camps;
+        private int zsm_camp_count;
+        private int zsm_patient_count_expected;
+        private int zsm_patient_count_orignal;
         private int rm_patient_count;
         private int rm_camp_count;
         private int rm_patient_count_orignal;
+
+        public int getZsm_camp_count() {
+            return zsm_camp_count;
+        }
+
+        public void setZsm_camp_count(int zsm_camp_count) {
+            this.zsm_camp_count = zsm_camp_count;
+        }
+
+        public int getZsm_patient_count_expected() {
+            return zsm_patient_count_expected;
+        }
+
+        public void setZsm_patient_count_expected(int zsm_patient_count_expected) {
+            this.zsm_patient_count_expected = zsm_patient_count_expected;
+        }
+
+        public int getZsm_patient_count_orignal() {
+            return zsm_patient_count_orignal;
+        }
+
+        public void setZsm_patient_count_orignal(int zsm_patient_count_orignal) {
+            this.zsm_patient_count_orignal = zsm_patient_count_orignal;
+        }
 
         public int getRm_patient_count_orignal() {
             return rm_patient_count_orignal;

@@ -64,7 +64,7 @@ public class CampPlanActivity extends CustomActivity {
         } else if (v.getId() == R.id.btn_my_camps) {
             startActivity(new Intent(getContext(), MyCampsActivity.class));
         } else if (v.getId() == R.id.btn_history) {
-
+            startActivity(new Intent(getContext(), CampHistoryTMActivity.class));
         }
     }
 

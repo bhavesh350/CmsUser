@@ -46,6 +46,9 @@
             android:name=".CampExecutionClickActivity"
             android:screenOrientation="sensorPortrait" />
         <activity
+            android:name=".CampHistoryNSMActivity"
+            android:screenOrientation="sensorPortrait" />
+        <activity
             android:name=".AddNewPatientActivity"
             android:screenOrientation="sensorPortrait" />
         <activity
@@ -104,8 +107,12 @@
             android:screenOrientation="sensorPortrait" />
 
 
-       <activity
+        <activity
             android:name=".CampHistoryDetailsUsersActivity"
+            android:screenOrientation="sensorPortrait" />
+
+        <activity
+            android:name=".CampHistoryTMActivity"
             android:screenOrientation="sensorPortrait" />
 
 

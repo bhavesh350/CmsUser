@@ -26,7 +26,7 @@ import java.util.ArrayList;
 import static com.cms.wockhardt.user.application.AppConstants.BASE_URL;
 import static com.cms.wockhardt.user.application.AppConstants.EMPLOYEE_ID;
 
-public class CampExecutionActivity extends CustomActivity implements CustomActivity.ResponseCallback{
+public class CampExecutionActivity extends CustomActivity implements CustomActivity.ResponseCallback {
 
     private Toolbar toolbar;
     private RecyclerView rv_list;
@@ -98,6 +98,6 @@ public class CampExecutionActivity extends CustomActivity implements CustomActiv
 
     @Override
     public void onErrorReceived(String error) {
-
+        MyApp.popMessage("Error", error, getContext());
     }
 }

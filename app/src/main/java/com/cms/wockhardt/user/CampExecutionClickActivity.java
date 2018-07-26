@@ -51,7 +51,6 @@ public class CampExecutionClickActivity extends CustomActivity {
         super.onClick(v);
         if (v.getId() == R.id.btn_history) {
             // showing camp history
-
             startActivity(new Intent(getContext(), CampHistoryDetailsUsersActivity.class));
         } else if (v.getId() == R.id.btn_new_patient) {
             startActivity(new Intent(getContext(), AddNewPatientActivity.class));

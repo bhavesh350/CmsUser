@@ -17,8 +17,6 @@ import org.json.JSONObject;
 
 public class ZsmSmMainActivity extends CustomActivity implements CustomActivity.ResponseCallback {
 
-    //    private Toolbar toolbar;
-    private RelativeLayout rl_camp_approval;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,8 +38,6 @@ public class ZsmSmMainActivity extends CustomActivity implements CustomActivity.
 
     private void setupUiElements() {
 
-        rl_camp_approval = findViewById(R.id.rl_camp_approval);
-
         setClick(R.id.btn_notification);
         setClick(R.id.btn_my_team);
         setClick(R.id.btn_leaderboard);
@@ -56,7 +52,7 @@ public class ZsmSmMainActivity extends CustomActivity implements CustomActivity.
             startActivity(new Intent(getContext(), MyTeamActivity.class).putExtra(AppConstants.EXTRA, false));
         } else if (v.getId() == R.id.btn_camp_history) {
             if (MyApp.getApplication().readUser().getData().getDesignation().equals("NSM")) {
-                startActivity(new Intent(getContext(), MyTeamActivity.class).putExtra(AppConstants.EXTRA, true));
+                startActivity(new Intent(getContext(), CampHistoryNSMActivity.class).putExtra(AppConstants.EXTRA, true));
                 return;
             }
             startActivity(new Intent(getContext(), CampHistoryZSMActivity

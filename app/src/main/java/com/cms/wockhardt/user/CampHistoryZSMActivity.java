@@ -46,13 +46,15 @@ public class CampHistoryZSMActivity extends CustomActivity implements CustomActi
     private Toolbar toolbar;
     public TextView select_month;
     private RecyclerView rl_list;
-//    private Spinner spinner_designation;
-//    private Spinner spinner_month;
+    private boolean isNSM = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setResponseListener(this);
+        isNSM = getIntent().getBooleanExtra("isSM", false);
+
+
         setContentView(R.layout.activity_camp_hostory_zsm);
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -74,64 +76,51 @@ public class CampHistoryZSMActivity extends CustomActivity implements CustomActi
     }
 
     private void setupUiElements() {
-//        spinner_designation = findViewById(R.id.spinner_designation);
         rl_list = findViewById(R.id.rl_list);
         rl_list.setLayoutManager(new LinearLayoutManager(getContext()));
-//        List<String> categories = new ArrayList<>();
-//        categories.add("TM");
-//        categories.add("RM");
-//        categories.add("ZSM");
-//        categories.add("SM");
-//        categories.add("NSM");
-//
-//        // Creating adapter for spinner
-//        ArrayAdapter<String> dataAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, categories);
-//        // Drop down layout style - list view with radio button
-//        dataAdapter.setDropDownViewResource(R.layout.text_spinner);
-//        // attaching data adapter to spinner
-////        spinner_designation.setAdapter(dataAdapter);
-
-
-//        List<String> categoriesMonths = new ArrayList<>();
-//        categoriesMonths.add("January");
-//        categoriesMonths.add("February");
-//        categoriesMonths.add("March");
-//        categoriesMonths.add("April");
-//        categoriesMonths.add("May");
-//        categoriesMonths.add("June");
-//        categoriesMonths.add("July");
-//        categoriesMonths.add("August");
-//        categoriesMonths.add("September");
-//        categoriesMonths.add("October");
-//        categoriesMonths.add("November");
-//        categoriesMonths.add("December");
-
-//        // Creating adapter for spinner
-//        ArrayAdapter<String> dataAdapterMonths = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, categoriesMonths);
-//
-//        // Drop down layout style - list view with radio button
-//        dataAdapterMonths.setDropDownViewResource(R.layout.text_spinner);
-//
-//        // attaching data adapter to spinner
-//        spinner_month.setAdapter(dataAdapterMonths);
 
         select_month = findViewById(R.id.select_month);
-        select_month.setText("JUNE, 2018");
+        if (isNSM)
+            select_month.setText(getIntent().getStringExtra("date"));
+        else
+            select_month.setText("JUNE, 2018");
         setTouchNClick(R.id.select_month);
 
         RequestParams p = new RequestParams();
-        p.put("user_id", MyApp.getApplication().readUser().getData().getId());
-        p.put("month", 6);
-        p.put("year", 2018);
 
-        postCall(getContext(), BASE_URL + "camp-history", p, "Loading...", 1);
+        if (getIntent().getIntExtra("year", 0) == 0) {
+            p.put("month", 6);
+            p.put("year", 2018);
+        } else {
+            p.put("month", getIntent().getIntExtra("month", 0));
+            p.put("year", getIntent().getIntExtra("year", 0));
+        }
+
+        if (!isNSM) {
+            if (MyApp.getApplication().readUser().getData().getDesignation().equals("SM")) {
+                p.put("emp_id", MyApp.getApplication().readUser().getData().getId());
+                postCall(getContext(), BASE_URL + "camp-history-sm", p, "Loading...", 1);
+            } else {
+                p.put("user_id", MyApp.getApplication().readUser().getData().getId());
+                postCall(getContext(), BASE_URL + "camp-history", p, "Loading...", 1);
+            }
+        } else {
+            if (getIntent().getStringExtra("designation").equals("SM")) {
+                p.put("emp_id", getIntent().getIntExtra("userId", 0));
+                postCall(getContext(), BASE_URL + "camp-history-sm", p, "Loading...", 1);
+            } else {
+                p.put("user_id", getIntent().getIntExtra("userId", 0));
+                postCall(getContext(), BASE_URL + "camp-history", p, "Loading...", 1);
+            }
+        }
+
     }
 
     @Override
     public void onClick(View v) {
         super.onClick(v);
         if (v == select_month) {
-
+            if (isNSM) return;
             Calendar c = Calendar.getInstance();
             MonthPickerDialog.Builder builder = new MonthPickerDialog.Builder(getContext(), new MonthPickerDialog.OnDateSetListener() {
                 @Override
@@ -139,11 +128,15 @@ public class CampHistoryZSMActivity extends CustomActivity implements CustomActi
                     Log.d("Selected", "selectedMonth : " + selectedMonth + " selectedYear : " + selectedYear);
 
                     RequestParams p = new RequestParams();
-                    p.put("user_id", MyApp.getApplication().readUser().getData().getId());
                     p.put("month", (selectedMonth + 1));
                     p.put("year", selectedYear);
-
-                    postCall(getContext(), BASE_URL + "camp-history", p, "Loading...", 1);
+                    if (MyApp.getApplication().readUser().getData().getDesignation().equals("SM")) {
+                        p.put("emp_id", MyApp.getApplication().readUser().getData().getId());
+                        postCall(getContext(), BASE_URL + "camp-history-sm", p, "Loading...", 1);
+                    } else {
+                        p.put("user_id", MyApp.getApplication().readUser().getData().getId());
+                        postCall(getContext(), BASE_URL + "camp-history", p, "Loading...", 1);
+                    }
                     select_month.setText(getMonth(selectedMonth) + ", " + selectedYear);
                 }
             }, c.get(Calendar.YEAR), c.get(Calendar.MONTH));
@@ -212,7 +205,7 @@ public class CampHistoryZSMActivity extends CustomActivity implements CustomActi
     public void onJsonObjectResponseReceived(JSONObject o, int callNumber) {
         if (o.optBoolean("status")) {
             CampHistoryZsm h = new Gson().fromJson(o.toString(), CampHistoryZsm.class);
-            CampHistoryZSMAdapter adapter = new CampHistoryZSMAdapter(getContext(), h.getData().get(0).getChild());
+            CampHistoryZSMAdapter adapter = new CampHistoryZSMAdapter(getContext(), h.getData().get(0).getChild(), select_month.getText().toString());
             rl_list.setAdapter(adapter);
         } else {
             MyApp.popMessage("Message", "No camp history found for the selected month.", getContext());

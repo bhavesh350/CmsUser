@@ -204,6 +204,6 @@ public class CreatePlanActivity extends CustomActivity implements CustomActivity
 
     @Override
     public void onErrorReceived(String error) {
-
+        MyApp.popMessage("Error", error, getContext());
     }
 }

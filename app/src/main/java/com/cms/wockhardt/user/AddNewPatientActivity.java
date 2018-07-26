@@ -229,6 +229,6 @@ public class AddNewPatientActivity extends CustomActivity implements CustomActiv
 
     @Override
     public void onErrorReceived(String error) {
-
+        MyApp.popMessage("Error", error, getContext());
     }
 }
