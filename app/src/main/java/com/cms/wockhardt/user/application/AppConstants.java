@@ -11,4 +11,6 @@ public class AppConstants {
     public static final String EXTRA = "extra";
     public static final String TAG = "CMS USER APP";
     public static final String EMPLOYEE_ID = "empId";
+    public static final String EXTRA_1 = "extra1";
+
 }

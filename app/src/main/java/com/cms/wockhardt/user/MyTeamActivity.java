@@ -51,7 +51,14 @@ public class MyTeamActivity extends CustomActivity implements CustomActivity.Res
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowCustomEnabled(true);
-        getSupportActionBar().setTitle(getString(R.string.my_team));
+
+        getSupportActionBar().setTitle(getDesignationToShow(MyApp.getApplication().readUser().getData().getDesignation()));
+        try {
+            if (getIntent().getStringExtra("title").length() > 1) {
+                getSupportActionBar().setTitle(getIntent().getStringExtra("title"));
+            }
+        } catch (Exception e) {
+        }
         setupUiElements();
 
         if (Build.VERSION.SDK_INT >= 19 && Build.VERSION.SDK_INT < 21) {
@@ -64,6 +71,7 @@ public class MyTeamActivity extends CustomActivity implements CustomActivity.Res
             MyApp.setWindowFlag(this, WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS, false);
             getWindow().setStatusBarColor(Color.TRANSPARENT);
         }
+
 
         RequestParams p = new RequestParams();
         if (isNextLevel) {
@@ -164,7 +172,20 @@ public class MyTeamActivity extends CustomActivity implements CustomActivity.Res
     public void goNextLevel(MyTeam.Data team, boolean isNextLevel) {
         if (isNextLevel && (!team.getDesignation().equals("TM") || isGoNext)) {
             startActivity(new Intent(getContext(), MyTeamActivity.class).putExtra("myId", team.getId())
-                    .putExtra("isNext", true));
+                    .putExtra("isNext", true).putExtra("title", getDesignationToShow(team.getDesignation())));
         }
+    }
+
+    public String getDesignationToShow(String designation) {
+        if (designation.equals("NSM")) {
+            return "SM";
+        } else if (designation.equals("SM")) {
+            return "ZSM";
+        } else if (designation.equals("ZSM")) {
+            return "RM";
+        } else if (designation.equals("RM")) {
+            return "TM";
+        }
+        return designation;
     }
 }

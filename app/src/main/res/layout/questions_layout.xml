@@ -56,7 +56,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="No"
-            android:checked="true"
+            android:checked="false"
             android:textColor="@color/black"
             android:textSize="18sp"
             android:textStyle="bold" />
@@ -118,7 +118,7 @@
             android:layout_height="wrap_content"
             android:text="No"
             android:textColor="@color/black"
-            android:checked="true"
+            android:checked="false"
             android:textSize="18sp"
             android:textStyle="bold" />
     </RadioGroup>
@@ -179,7 +179,7 @@
             android:layout_height="wrap_content"
             android:text="No"
             android:textColor="@color/black"
-            android:checked="true"
+            android:checked="false"
             android:textSize="18sp"
             android:textStyle="bold" />
     </RadioGroup>
@@ -238,7 +238,7 @@
             android:id="@+id/radio_4_no"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:checked="true"
+            android:checked="false"
             android:text="No"
             android:textColor="@color/black"
             android:textSize="18sp"
@@ -303,7 +303,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="No"
-            android:checked="true"
+            android:checked="false"
             android:textColor="@color/black"
             android:textSize="18sp"
             android:textStyle="bold" />
@@ -365,7 +365,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="No"
-            android:checked="true"
+            android:checked="false"
             android:textColor="@color/black"
             android:textSize="18sp"
             android:textStyle="bold" />

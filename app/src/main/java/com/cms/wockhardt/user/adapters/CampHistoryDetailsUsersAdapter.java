@@ -56,6 +56,9 @@ public class CampHistoryDetailsUsersAdapter extends RecyclerView.Adapter<CampHis
 
         if (holder.txt_report.getText().toString().isEmpty() || holder.txt_report.getText().toString().equals("null")) {
             holder.txt_report.setText("Not measured");
+            holder.txt_generate_score.setVisibility(View.VISIBLE);
+        }else{
+            holder.txt_generate_score.setVisibility(View.GONE);
         }
     }
 

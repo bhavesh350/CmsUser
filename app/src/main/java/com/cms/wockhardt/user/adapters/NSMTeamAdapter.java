@@ -81,6 +81,7 @@ public class NSMTeamAdapter extends RecyclerView.Adapter<NSMTeamAdapter.MyViewHo
             i.putExtra("year", ((CampHistoryNSMActivity) context).year);
             i.putExtra("month", ((CampHistoryNSMActivity) context).month);
             i.putExtra("designation",data.get(getLayoutPosition()).getDesignation());
+            i.putExtra("title",data.get(getLayoutPosition()).getChild().get(0).getDesignation());
             context.startActivity(i);
         }
     }

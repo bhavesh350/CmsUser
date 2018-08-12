@@ -54,7 +54,8 @@ public class CampHistoryRMDetailsAdapter extends RecyclerView.Adapter<CampHistor
         holder.txt_emp_id.setText("" + d.getMsl_code());
 
 
-        holder.txt_patients.setText("Total Patients\n" + d.getPatients().size());
+        holder.txt_patients.setText("Total Patients\n" + d.getPatients().size() + "\n" +
+                "Expected patients\n" + d.getPatient_count());
 //        holder.txt_camps.setText("Total Camps\n" + campList.size());
 //        TeamCampsAdapter adapter = new TeamCampsAdapter(context, campList);
 //        holder.rv_camp.setAdapter(adapter);
@@ -62,7 +63,7 @@ public class CampHistoryRMDetailsAdapter extends RecyclerView.Adapter<CampHistor
 //        if (d.getCamps().size() == 0) {
 //            holder.card_view.setCardBackgroundColor(context.getResources().getColor(R.color.card_red));
 //        } else {
-            holder.card_view.setCardBackgroundColor(context.getResources().getColor(R.color.card_green));
+        holder.card_view.setCardBackgroundColor(context.getResources().getColor(R.color.card_green));
 //        }
     }
 

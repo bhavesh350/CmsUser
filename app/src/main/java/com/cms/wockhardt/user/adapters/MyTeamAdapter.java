@@ -82,7 +82,7 @@ public class MyTeamAdapter extends RecyclerView.Adapter<MyTeamAdapter.MyViewHold
                         }
                     }
                     context.startActivity(new Intent(context, MyCampsActivity.class).putExtra(AppConstants.EXTRA, true)
-                            .putExtra("myId", data.get(getLayoutPosition()).getId()));
+                            .putExtra("myId", data.get(getLayoutPosition()).getId()).putExtra("title",data.get(getLayoutPosition()).getDesignation()));
                 } else {
                     if (data.get(getLayoutPosition()).getChild().size() > 0) {
                         SingleInstance.getInstance().setNextTeam(data.get(getLayoutPosition()).getChild());

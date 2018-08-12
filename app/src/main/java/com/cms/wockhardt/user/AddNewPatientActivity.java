@@ -70,6 +70,7 @@ public class AddNewPatientActivity extends CustomActivity implements CustomActiv
     private void setupUiElements() {
         setTouchNClick(R.id.btn_date);
         setTouchNClick(R.id.btn_submit);
+        setTouchNClick(R.id.txt_clear_data);
         edt_dob = findViewById(R.id.edt_dob);
         edt_height = findViewById(R.id.edt_height);
         edt_abdo = findViewById(R.id.edt_abdo);
@@ -98,6 +99,13 @@ public class AddNewPatientActivity extends CustomActivity implements CustomActiv
         super.onClick(v);
         if (v.getId() == R.id.btn_date) {
             dateDialog();
+        } else if (v.getId() == R.id.txt_clear_data) {
+            edt_abdo.setText("");
+            edt_weight.setText("");
+            edt_height.setText("");
+            edt_dob.setText("");
+            edt_mobile.setText("");
+            edt_patient_name.setText("");
         } else if (v.getId() == R.id.btn_submit) {
 
             if (edt_patient_name.getText().toString().isEmpty()) {
@@ -110,6 +118,11 @@ public class AddNewPatientActivity extends CustomActivity implements CustomActiv
                 return;
             }
 
+            if(edt_mobile.getText().toString().contains(".") || edt_mobile.getText().toString().contains("+")){
+                edt_mobile.setError("Mobile number is not valid");
+                return;
+            }
+
             if (edt_dob.getText().toString().isEmpty() && edt_dob.getText().toString().length() != 10) {
                 edt_dob.setError("Enter a valid dob");
                 return;
@@ -119,18 +132,35 @@ public class AddNewPatientActivity extends CustomActivity implements CustomActiv
                 edt_height.setError("Enter height in feet decimal");
                 return;
             }
+            if (Float.parseFloat(edt_height.getText().toString()) > 8) {
+                MyApp.popMessage("Error", "You entered height '" + edt_height.getText().toString() + " " +
+                        "feet' is abnormal.", getContext());
+            }
             if (edt_weight.getText().toString().isEmpty()) {
                 edt_height.setError("Enter weight in kg");
                 return;
             }
-
+            if (Float.parseFloat(edt_weight.getText().toString()) > 250) {
+                MyApp.popMessage("Error", "You entered weight '" + edt_weight.getText().toString() + " " +
+                        "KG' is abnormal.", getContext());
+            }
             if (edt_abdo.getText().toString().isEmpty()) {
                 edt_abdo.setError("Enter abdominal circumference");
                 return;
             }
-
+            if (Float.parseFloat(edt_abdo.getText().toString()) > 10) {
+                MyApp.popMessage("Error", "You entered abdominal circumference '" +
+                        edt_abdo.getText().toString() + " " +
+                        "CM' is abnormal.", getContext());
+            }
+            String maleFemale = isMale ? "Male" : "Female";
             AlertDialog.Builder b = new AlertDialog.Builder(getContext());
-            b.setTitle("Confirm Patient").setMessage("Are you sure with these details of the patient")
+            b.setTitle("Confirm Patient").setMessage("Are you sure with following details of the patient\n\n"
+                    + "Name : " + edt_patient_name.getText().toString() + " (" + maleFemale + ")\n"
+                    + "Mob No : " + edt_mobile.getText().toString() + "\nDOB : " + edt_dob.getText().toString() + "\n" +
+                    "Height : " + edt_height.getText().toString() + " Feet\n" +
+                    "Weight : " + edt_weight.getText().toString() + " KG\n" +
+                    "Abdominal Cir : " + edt_abdo.getText().toString() + " CM")
                     .setPositiveButton("YES", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
@@ -177,6 +207,7 @@ public class AddNewPatientActivity extends CustomActivity implements CustomActiv
                         edt_dob.setText(parseDate(dayOfMonth + "-" + (monthOfYear + 1) + "-" + year));
                     }
                 }, mYear, mMonth, mDay);
+        datePickerDialog.getDatePicker().setMaxDate(System.currentTimeMillis() - (1000 * 60 * 60 * 24));
 //        datePickerDialog.getDatePicker().setMinDate(System.currentTimeMillis() - 1000);
         datePickerDialog.show();
     }
@@ -184,7 +215,7 @@ public class AddNewPatientActivity extends CustomActivity implements CustomActiv
     public String parseDate(String time) {
         Log.e("Date", "parseDateToHHMM: " + time);
         String inputPattern = "d-M-yyyy";
-        String outputPattern = "d MMM, yyyy";
+        String outputPattern = "dd/MM/yyyy";
         String outputPatternServer = "yyyy-MM-dd";//2018-06-18
         SimpleDateFormat inputFormat = new SimpleDateFormat(inputPattern);
         SimpleDateFormat outputFormat = new SimpleDateFormat(outputPattern);
@@ -211,6 +242,13 @@ public class AddNewPatientActivity extends CustomActivity implements CustomActiv
             Patient.Data p = new Gson().fromJson(o.optJSONObject("data").toString(), Patient.Data.class);
             SingleInstance.getInstance().setPatient(p);
             startActivity(new Intent(getContext(), QuestionnaireActivity.class));
+
+            edt_abdo.setText("");
+            edt_weight.setText("");
+            edt_height.setText("");
+            edt_dob.setText("");
+            edt_mobile.setText("");
+            edt_patient_name.setText("");
         } else {
             MyApp.popMessage("Error", o.optJSONArray("data").optString(0), getContext());
         }

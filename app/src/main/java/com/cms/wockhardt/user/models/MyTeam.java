@@ -50,6 +50,16 @@ public class MyTeam {
         private int zsm_patient_count_expected;
         private int zsm_patient_count_orignal;
         private int rm_patient_count;
+        private int rm_patient_count_expected;
+
+        public int getRm_patient_count_expected() {
+            return rm_patient_count_expected;
+        }
+
+        public void setRm_patient_count_expected(int rm_patient_count_expected) {
+            this.rm_patient_count_expected = rm_patient_count_expected;
+        }
+
         private int rm_camp_count;
         private int rm_patient_count_orignal;
 

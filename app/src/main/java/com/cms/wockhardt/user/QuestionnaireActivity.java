@@ -139,6 +139,12 @@ public class QuestionnaireActivity extends CustomActivity implements CustomActiv
     public void onClick(View v) {
         super.onClick(v);
         if (v.getId() == R.id.btn_submit) {
+
+            if (firstAnsStatus == 0 || secondAnsStatus == 0 || thirdAnsStatus == 0 || fourthAnsStatus == 0 || firstAnsStatus == 0 || sixthAnsStatus == 0) {
+                MyApp.popMessage("Alert!", "You have not answered all the questions yet. Please check mark Yes or No for questions 1 to 6", getContext());
+                return;
+            }
+
             final String contentType = RequestParams.APPLICATION_OCTET_STREAM;
             RequestParams p = new RequestParams();
             p.put("patient_id", currentPatient.getId());
@@ -316,33 +322,46 @@ public class QuestionnaireActivity extends CustomActivity implements CustomActiv
     }
 
     private boolean firstAns = false, secondAns = false, thirdAns = false, fourthAns = false, fifthAns = false, sixthAns = false;
+    private int firstAnsStatus = 0, secondAnsStatus = 0, thirdAnsStatus = 0, fourthAnsStatus = 0, fifthAnsStatus = 0, sixthAnsStatus = 0;
 
     @Override
     public void onCheckedChanged(RadioGroup group, int checkedId) {
         if (checkedId == R.id.radio_6_yes) {
             sixthAns = true;
+            sixthAnsStatus = 1;
         } else if (checkedId == R.id.radio_6_no) {
             sixthAns = false;
+            sixthAnsStatus = 1;
         } else if (checkedId == R.id.radio_5_yes) {
             fifthAns = true;
+            fifthAnsStatus = 1;
         } else if (checkedId == R.id.radio_5_no) {
             fifthAns = false;
+            fifthAnsStatus = 1;
         } else if (checkedId == R.id.radio_4_yes) {
             fourthAns = true;
+            fourthAnsStatus = 1;
         } else if (checkedId == R.id.radio_4_no) {
             fourthAns = false;
+            fourthAnsStatus = 1;
         } else if (checkedId == R.id.radio_3_yes) {
             thirdAns = true;
+            thirdAnsStatus = 1;
         } else if (checkedId == R.id.radio_3_no) {
             thirdAns = false;
+            thirdAnsStatus = 1;
         } else if (checkedId == R.id.radio_2_yes) {
             secondAns = true;
+            secondAnsStatus = 1;
         } else if (checkedId == R.id.radio_2_no) {
             secondAns = false;
+            secondAnsStatus = 1;
         } else if (checkedId == R.id.radio_1_yes) {
             firstAns = true;
+            firstAnsStatus = 1;
         } else if (checkedId == R.id.radio_1_no) {
             firstAns = false;
+            firstAnsStatus = 1;
         }
     }
 }

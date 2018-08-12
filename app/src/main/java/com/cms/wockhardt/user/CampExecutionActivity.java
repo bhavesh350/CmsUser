@@ -22,6 +22,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 
 import static com.cms.wockhardt.user.application.AppConstants.BASE_URL;
 import static com.cms.wockhardt.user.application.AppConstants.EMPLOYEE_ID;
@@ -55,7 +56,15 @@ public class CampExecutionActivity extends CustomActivity implements CustomActiv
 
         RequestParams p = new RequestParams();
         p.put("user_id", MyApp.getApplication().readUser().getData().getId());
-        postCall(getContext(), BASE_URL + "my-camp", p, "Fetching camp data...", 1);
+        Calendar c = Calendar.getInstance();
+        int month = c.get(Calendar.MONTH);
+        month = month + 1;
+        int year = c.get(Calendar.YEAR);
+        p.put("month", month);
+        p.put("year", year);
+        p.put("user_id", MyApp.getApplication().readUser().getData().getId());
+        postCall(getContext(), BASE_URL + "camp-history-for-tm", p, "Loading...", 1);
+//        postCall(getContext(), BASE_URL + "my-camp", p, "Fetching camp data...", 1);
 
     }
 

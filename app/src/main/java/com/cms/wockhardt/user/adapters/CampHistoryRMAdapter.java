@@ -49,10 +49,13 @@ public class CampHistoryRMAdapter extends RecyclerView.Adapter<CampHistoryRMAdap
         MyTeam.Data d = data.get(position);
         holder.txt_name.setText(d.getName());
         int ccc = 0;
-        for (Camp.Data dd : d.getCamps()) {
-            if (dd.getStatus() == 2)
-                ccc += dd.getPatients().size();
-        }
+            int ddd = 0;
+            for (Camp.Data dd : d.getCamps()) {
+                if (dd.getStatus() == 2) {
+                    ccc += dd.getPatients().size();
+                    ddd += dd.getPatient_count();
+                }
+            }
 
         holder.txt_designation.setText("" + d.getDesignation());
         holder.txt_emp_id.setText("" + d.getEmp_no());
@@ -64,7 +67,8 @@ public class CampHistoryRMAdapter extends RecyclerView.Adapter<CampHistoryRMAdap
                 campList.add(dd);
             }
         }
-        holder.txt_patients.setText("Total Patients\n" + ccc);
+        holder.txt_patients.setText("Total Patients\n" + ccc + "\n"
+                + "Expected patients\n" + ddd);
         holder.txt_camps.setText("Total Camps\n" + campList.size());
         TeamCampsAdapter adapter = new TeamCampsAdapter(context, campList);
         holder.rv_camp.setAdapter(adapter);

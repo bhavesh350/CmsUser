@@ -114,6 +114,12 @@
         <activity
             android:name=".CampHistoryTMActivity"
             android:screenOrientation="sensorPortrait" />
+        <activity
+            android:name=".VerifyMobileActivity"
+            android:screenOrientation="sensorPortrait" />
+        <activity
+            android:name=".EnterMobileActivity"
+            android:screenOrientation="sensorPortrait" />
 
 
         <service android:name=".MyFirebaseInstanceIDService">

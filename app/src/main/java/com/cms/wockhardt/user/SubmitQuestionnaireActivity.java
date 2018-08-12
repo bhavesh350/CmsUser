@@ -1,7 +1,9 @@
 package com.cms.wockhardt.user;
 
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
@@ -79,8 +81,22 @@ public class SubmitQuestionnaireActivity extends CustomActivity {
         } else if (v.getId() == R.id.btn_next_patient) {
             finish();
         } else if (v.getId() == R.id.btn_finish_camp) {
-            startActivity(new Intent(getContext(), MainActivity.class));
-            finishAffinity();
+            AlertDialog.Builder b = new AlertDialog.Builder(getContext());
+            b.setMessage("Are you sure to finish this camp & no other patient to screen.").setTitle("Wockhardt Alert!")
+                    .setPositiveButton("Finish Camp", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                            startActivity(new Intent(getContext(), MainActivity.class));
+                            finishAffinity();
+                        }
+                    }).setNegativeButton("No", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                }
+            }).create().show();
+
         }
 
     }
