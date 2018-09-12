@@ -33,6 +33,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import static com.cms.wockhardt.user.application.AppConstants.BASE_URL;
 import static com.cms.wockhardt.user.application.AppConstants.EMPLOYEE_ID;
@@ -99,6 +100,12 @@ public class CreatePlanActivity extends CustomActivity implements CustomActivity
             }
             if (edt_patient_count.getText().toString().isEmpty()) {
                 edt_patient_count.setError("Enter expected number of patients.");
+                return;
+            }
+
+            if (SingleInstance.getInstance().getCampDates().containsKey(createCampData)) {
+                MyApp.popMessage("Alert", "You already had created a camp on selected date. Same date cannot have " +
+                        "two camps.\nThank you", getContext());
                 return;
             }
 
@@ -218,6 +225,9 @@ public class CreatePlanActivity extends CustomActivity implements CustomActivity
         if (callNumber == 1 && o.optBoolean("status")) {
             MyApp.popFinishableMessage("Message", "Camp created successfully. " +
                     "You can check status of the camp with My Camps menu option.\nThank you.", CreatePlanActivity.this);
+            Map<String, String> map = SingleInstance.getInstance().getCampDates();
+            map.put(createCampData, "");
+            SingleInstance.getInstance().setCampDates(map);
         } else {
             MyApp.popMessage("Error", o.optJSONArray("data").optString(0), getContext());
         }

@@ -11,21 +11,17 @@ import android.view.View;
 import android.view.WindowManager;
 
 import com.cms.wockhardt.user.adapters.ExecuteCampsAdapter;
-import com.cms.wockhardt.user.adapters.MyCampsAdapter;
 import com.cms.wockhardt.user.application.MyApp;
 import com.cms.wockhardt.user.models.Camp;
-import com.cms.wockhardt.user.models.Doctor;
 import com.google.gson.Gson;
 import com.loopj.android.http.RequestParams;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
 import java.util.Calendar;
 
 import static com.cms.wockhardt.user.application.AppConstants.BASE_URL;
-import static com.cms.wockhardt.user.application.AppConstants.EMPLOYEE_ID;
 
 public class CampExecutionActivity extends CustomActivity implements CustomActivity.ResponseCallback {
 

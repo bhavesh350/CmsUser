@@ -43,6 +43,15 @@ public class Camp {
         private Doctor.Data doctor;
         private List<Patient.Data> patients;
         private User.Data employee;
+        private boolean isPast;
+
+        public boolean isPast() {
+            return isPast;
+        }
+
+        public void setPast(boolean past) {
+            isPast = past;
+        }
 
         public User.Data getEmployee() {
             return employee;

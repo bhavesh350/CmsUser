@@ -16,6 +16,7 @@ import com.cms.wockhardt.user.application.SingleInstance;
 import com.cms.wockhardt.user.models.Camp;
 import com.cms.wockhardt.user.models.Doctor;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -48,12 +49,20 @@ public class ExecuteCampsAdapter extends RecyclerView.Adapter<ExecuteCampsAdapte
         holder.txt_name.setText(d.getDoctor().getName() + " " + "(" + d.getDoctor().getMsl_code() + ")");
         holder.txt_count.setText(d.getPatient_count() + " Patients");
         holder.txt_date.setText(MyApp.parseDateFullMonth(d.getCamp_date().split(" ")[0]));
-        if (d.getStatus() == 2 && MyApp.getTodayDate(System.currentTimeMillis()).equals(holder.txt_date.getText().toString())) {
-            holder.card_view.setCardBackgroundColor(context.getResources().getColor(R.color.card_green));
-        } else if (d.getStatus() == 1) {
-            holder.card_view.setCardBackgroundColor(context.getResources().getColor(R.color.card_yellow));
-        }else if (d.getStatus() == 0) {
+
+        Date campDate = MyApp.getDate(d.getCamp_date().split(" ")[0]);
+        boolean isPast = new Date(System.currentTimeMillis() - (24 * 60 * 60 * 1000)).after(campDate);
+
+
+        if (d.getStatus() == 0) {
             holder.card_view.setCardBackgroundColor(context.getResources().getColor(R.color.card_red));
+        } else if (d.getStatus() == 2) {
+            holder.card_view.setCardBackgroundColor(context.getResources().getColor(R.color.card_green));
+        } else if (isPast) {
+            data.get(position).setPast(true);
+            holder.card_view.setCardBackgroundColor(context.getResources().getColor(R.color.card_gray));
+        } else {
+            holder.card_view.setCardBackgroundColor(context.getResources().getColor(R.color.card_yellow));
         }
     }
 
@@ -86,12 +95,17 @@ public class ExecuteCampsAdapter extends RecyclerView.Adapter<ExecuteCampsAdapte
                 SingleInstance.getInstance().setSelectedCamp(data.get(getLayoutPosition()));
                 context.startActivity(new Intent(context, CampExecutionClickActivity.class));
             } else {
+                Date campDate = MyApp.getDate(data.get(getLayoutPosition()).getCamp_date().split(" ")[0]);
+                boolean isPast = new Date(System.currentTimeMillis() - (24 * 60 * 60 * 1000)).after(campDate);
+
                 if (data.get(getLayoutPosition()).getStatus() == 1) {
                     MyApp.popMessage("Alert", "Your camp is not approved yet.", context);
                 } else if (data.get(getLayoutPosition()).getStatus() == 0) {
                     MyApp.popMessage("Alert", "Your camp has been rejected by your RM.", context);
+                } else if (isPast) {
+                    MyApp.showMassage(context, "It's past date camp.");
                 } else {
-                    MyApp.showMassage(context, "It's a past camp");
+                    MyApp.popMessage("Alert", "It's future camp date, please wait for the date to come.", context);
                 }
             }
 

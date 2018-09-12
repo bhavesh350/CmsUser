@@ -11,8 +11,19 @@ import android.view.WindowManager;
 import android.widget.Button;
 
 import com.cms.wockhardt.user.application.MyApp;
+import com.cms.wockhardt.user.application.SingleInstance;
+import com.cms.wockhardt.user.models.Camp;
+import com.google.gson.Gson;
+import com.loopj.android.http.RequestParams;
 
-public class CampExecutionClickActivity extends CustomActivity {
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.util.Calendar;
+
+import static com.cms.wockhardt.user.application.AppConstants.BASE_URL;
+
+public class CampExecutionClickActivity extends CustomActivity implements CustomActivity.ResponseCallback{
 
     private Toolbar toolbar;
 
@@ -21,6 +32,7 @@ public class CampExecutionClickActivity extends CustomActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_camp_execution_click);
         toolbar = findViewById(R.id.toolbar);
+        setResponseListener(this);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowCustomEnabled(true);
@@ -57,9 +69,58 @@ public class CampExecutionClickActivity extends CustomActivity {
         }
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        RequestParams p = new RequestParams();
+        p.put("user_id", MyApp.getApplication().readUser().getData().getId());
+        Calendar c = Calendar.getInstance();
+        int month = c.get(Calendar.MONTH);
+        month = month + 1;
+        int year = c.get(Calendar.YEAR);
+        p.put("month", month);
+        p.put("year", year);
+        p.put("user_id", MyApp.getApplication().readUser().getData().getId());
+        postCall(getContext(), BASE_URL + "camp-history-for-tm", p, "", 10);
+    }
+
     private Context getContext() {
         return CampExecutionClickActivity.this;
     }
 
 
+    @Override
+    public void onJsonObjectResponseReceived(JSONObject o, int callNumber) {
+        if (callNumber == 10 && o.optBoolean("status")) {
+            Camp c = new Gson().fromJson(o.toString(), Camp.class);
+            if (c.getData().size() == 0) {
+//                MyApp.popFinishableMessage("Message", "No camp created yet", CampExecutionActivity.this);
+            } else {
+                for (int i = 0; i <c.getData().size() ; i++) {
+                    if(SingleInstance.getInstance().getSelectedCamp().getId()==c.getData().get(i).getId()){
+                        SingleInstance.getInstance().setSelectedCamp(c.getData().get(i));
+                    }
+                }
+//                ExecuteCampsAdapter adapter = new ExecuteCampsAdapter(getContext(), c.getData());
+//                rv_list.setAdapter(adapter);
+            }
+        } else {
+//            MyApp.popFinishableMessage("Error", o.optJSONArray("data").optString(0), CampExecutionActivity.this);
+        }
+    }
+
+    @Override
+    public void onJsonArrayResponseReceived(JSONArray a, int callNumber) {
+
+    }
+
+    @Override
+    public void onTimeOutRetry(int callNumber) {
+
+    }
+
+    @Override
+    public void onErrorReceived(String error) {
+
+    }
 }

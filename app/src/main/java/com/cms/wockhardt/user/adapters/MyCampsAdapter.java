@@ -14,6 +14,7 @@ import com.cms.wockhardt.user.application.MyApp;
 import com.cms.wockhardt.user.models.Camp;
 import com.cms.wockhardt.user.models.Doctor;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -50,10 +51,17 @@ public class MyCampsAdapter extends RecyclerView.Adapter<MyCampsAdapter.MyViewHo
         holder.txt_name.setText(d.getDoctor().getName() + " " + "(" + d.getDoctor().getMsl_code() + ")");
         holder.txt_count.setText(d.getPatient_count() + " Patients");
         holder.txt_date.setText(MyApp.parseDateFullMonth(d.getCamp_date().split(" ")[0]));
+
+        Date campDate = MyApp.getDate(d.getCamp_date().split(" ")[0]);
+        boolean isPast = new Date(System.currentTimeMillis()-(24*60*60*1000)).after(campDate);
+
         if (d.getStatus() == 0) {
             holder.card_view.setCardBackgroundColor(context.getResources().getColor(R.color.card_red));
         } else if (d.getStatus() == 2) {
             holder.card_view.setCardBackgroundColor(context.getResources().getColor(R.color.card_green));
+        } else if (isPast) {
+            data.get(position).setPast(true);
+            holder.card_view.setCardBackgroundColor(context.getResources().getColor(R.color.card_gray));
         } else {
             holder.card_view.setCardBackgroundColor(context.getResources().getColor(R.color.card_yellow));
         }
@@ -82,7 +90,7 @@ public class MyCampsAdapter extends RecyclerView.Adapter<MyCampsAdapter.MyViewHo
         @Override
         public void onClick(View v) {
 
-            if (data.get(getLayoutPosition()).getStatus() == 1) {
+            if (data.get(getLayoutPosition()).getStatus() == 1 && !data.get(getLayoutPosition()).isPast()) {
                 ((MyCampsActivity) context).openApprovalCampDialog(data.get(getLayoutPosition()).getId(), getLayoutPosition());
             }
         }

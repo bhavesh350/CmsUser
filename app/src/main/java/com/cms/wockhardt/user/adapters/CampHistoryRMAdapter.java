@@ -82,7 +82,11 @@ public class CampHistoryRMAdapter extends RecyclerView.Adapter<CampHistoryRMAdap
 
     @Override
     public int getItemCount() {
-        return data.size();
+       try{
+           return data.size();
+       }catch (Exception e){
+           return 0;
+       }
     }
 
     class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {

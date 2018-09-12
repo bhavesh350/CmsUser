@@ -140,11 +140,11 @@ public class MyCampsActivity extends CustomActivity implements CustomActivity.Re
                 MyApp.popFinishableMessage("Message", "No camp created yet", MyCampsActivity.this);
             } else {
                 List<Camp.Data> campData = c.getData();
-                for (int i = 0; i < c.getData().size(); i++) {
-                    if (c.getData().get(i).getStatus() == 2) {
-                        campData.remove(i);
-                    }
-                }
+//                for (int i = 0; i < c.getData().size(); i++) {
+//                    if (c.getData().get(i).getStatus() == 2) {
+//                        campData.remove(i);
+//                    }
+//                }
                 adapter = new MyCampsAdapter(getContext(), campData);
                 rv_list.setAdapter(adapter);
             }

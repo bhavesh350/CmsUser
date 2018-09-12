@@ -113,12 +113,12 @@ public class AddNewPatientActivity extends CustomActivity implements CustomActiv
                 return;
             }
 
-            if (edt_mobile.getText().toString().isEmpty() && edt_mobile.getText().length() != 10) {
+            if (edt_mobile.getText().toString().isEmpty() || edt_mobile.getText().length() != 10) {
                 edt_mobile.setError("Enter a valid mobile number");
                 return;
             }
 
-            if(edt_mobile.getText().toString().contains(".") || edt_mobile.getText().toString().contains("+")){
+            if (edt_mobile.getText().toString().contains(".") || edt_mobile.getText().toString().contains("+")) {
                 edt_mobile.setError("Mobile number is not valid");
                 return;
             }
@@ -149,42 +149,84 @@ public class AddNewPatientActivity extends CustomActivity implements CustomActiv
                 return;
             }
             if (Float.parseFloat(edt_abdo.getText().toString()) > 10) {
-                MyApp.popMessage("Error", "You entered abdominal circumference '" +
+                AlertDialog.Builder bb = new AlertDialog.Builder(getContext());
+                bb.setTitle("Error").setMessage("You entered abdominal circumference '" +
                         edt_abdo.getText().toString() + " " +
-                        "CM' is abnormal.", getContext());
+                        "CM' is abnormal.\n\nDo you want to continue with same?").setPositiveButton("YES",
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogb, int which) {
+                                dialogb.dismiss();
+                                String maleFemale = isMale ? "Male" : "Female";
+                                AlertDialog.Builder b = new AlertDialog.Builder(getContext());
+                                b.setTitle("Confirm Patient").setMessage("Are you sure with following details of the patient\n\n"
+                                        + "Name : " + edt_patient_name.getText().toString() + " (" + maleFemale + ")\n"
+                                        + "Mob No : " + edt_mobile.getText().toString() + "\nDOB : " + edt_dob.getText().toString() + "\n" +
+                                        "Height : " + edt_height.getText().toString() + " Feet\n" +
+                                        "Weight : " + edt_weight.getText().toString() + " KG\n" +
+                                        "Abdominal Cir : " + edt_abdo.getText().toString() + " CM")
+                                        .setPositiveButton("YES", new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                dialog.dismiss();
+                                                RequestParams p = new RequestParams();
+                                                p.put("camp_id", SingleInstance.getInstance().getSelectedCamp().getId());
+                                                p.put("name", edt_patient_name.getText().toString());
+                                                p.put("sex", isMale ? "m" : "f");
+                                                p.put("mobile", edt_mobile.getText().toString());
+                                                if (getChangedDate(edt_dob.getText().toString()).isEmpty()) {
+                                                    MyApp.popMessage("Error", "Please enter a valid date", getContext());
+                                                    return;
+                                                }
+                                                p.put("dob", getChangedDate(edt_dob.getText().toString()));
+                                                p.put("height", edt_height.getText().toString());
+                                                p.put("weight", edt_weight.getText().toString());
+                                                p.put("abdominal_circumference", edt_abdo.getText().toString());
+                                                postCall(getContext(), BASE_URL + "create-patient", p, "Creating Patient...", 1);
+                                            }
+                                        }).setNegativeButton("NO", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        dialog.dismiss();
+                                    }
+                                }).create().show();
+                            }
+                        }).setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                }).create().show();
+//                MyApp.popMessage("Error", "You entered abdominal circumference '" +
+//                        edt_abdo.getText().toString() + " " +
+//                        "CM' is abnormal.", getContext());
             }
-            String maleFemale = isMale ? "Male" : "Female";
-            AlertDialog.Builder b = new AlertDialog.Builder(getContext());
-            b.setTitle("Confirm Patient").setMessage("Are you sure with following details of the patient\n\n"
-                    + "Name : " + edt_patient_name.getText().toString() + " (" + maleFemale + ")\n"
-                    + "Mob No : " + edt_mobile.getText().toString() + "\nDOB : " + edt_dob.getText().toString() + "\n" +
-                    "Height : " + edt_height.getText().toString() + " Feet\n" +
-                    "Weight : " + edt_weight.getText().toString() + " KG\n" +
-                    "Abdominal Cir : " + edt_abdo.getText().toString() + " CM")
-                    .setPositiveButton("YES", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.dismiss();
-                            RequestParams p = new RequestParams();
-                            p.put("camp_id", SingleInstance.getInstance().getSelectedCamp().getId());
-                            p.put("name", edt_patient_name.getText().toString());
-                            p.put("sex", isMale ? "m" : "f");
-                            p.put("mobile", edt_mobile.getText().toString());
-                            p.put("dob", createCampData);
-                            p.put("height", edt_height.getText().toString());
-                            p.put("weight", edt_weight.getText().toString());
-                            p.put("abdominal_circumference", edt_abdo.getText().toString());
-                            postCall(getContext(), BASE_URL + "create-patient", p, "Creating Patient...", 1);
-                        }
-                    }).setNegativeButton("NO", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    dialog.dismiss();
-                }
-            }).create().show();
+
 
 //            startActivity(new Intent(getContext(), QuestionnaireActivity.class));
         }
+    }
+
+    private String getChangedDate(String time) {
+//        Log.e("Date", "parseDateToHHMM: " + time);
+        String inputPattern = "dd/MM/yyyy";
+//        String outputPattern = "dd/MM/yyyy";
+        String outputPatternServer = "yyyy-MM-dd";//2018-06-18
+        SimpleDateFormat inputFormat = new SimpleDateFormat(inputPattern);
+//        SimpleDateFormat outputFormat = new SimpleDateFormat(outputPattern);
+        SimpleDateFormat outputFormatServer = new SimpleDateFormat(outputPatternServer);
+
+        Date date;
+        String str = null;
+//        String str2 = null;
+        try {
+            date = inputFormat.parse(time);
+            str = outputFormatServer.format(date);
+//            str2 = outputFormatServer.format(date);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return str;
     }
 
     private Context getContext() {
@@ -233,7 +275,7 @@ public class AddNewPatientActivity extends CustomActivity implements CustomActiv
         return str;
     }
 
-    String createCampData;
+    String createCampData = null;
 
     @Override
     public void onJsonObjectResponseReceived(JSONObject o, int callNumber) {

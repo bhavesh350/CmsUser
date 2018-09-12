@@ -6,7 +6,9 @@ import com.cms.wockhardt.user.models.MyTeam;
 import com.cms.wockhardt.user.models.Patient;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class SingleInstance {
     private static final SingleInstance ourInstance = new SingleInstance();
@@ -16,6 +18,15 @@ public class SingleInstance {
     private Patient.Question currentQuestionReport;
     private MyTeam.Data zsmHistoryData;
     private Camp historyCamp ;
+    private Map<String,String> campDates = new HashMap<>();
+
+    public Map<String, String> getCampDates() {
+        return campDates;
+    }
+
+    public void setCampDates(Map<String, String> campDates) {
+        this.campDates = campDates;
+    }
 
     public Camp getHistoryCamp() {
         return historyCamp;
